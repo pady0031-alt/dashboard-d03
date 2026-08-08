@@ -19,6 +19,7 @@
       <a href="index.html">Inicio</a>
       <a href="caracteristicas.html">Características</a>
       <a href="precios.html" class="active">Precios</a>
+      <a href="blog.html">Blog</a>
       <a href="contacto.html">Contacto</a>
       <a href="registro.html">Registro</a>
       <div class="mobile-menu-cta">
@@ -50,7 +51,7 @@
       <div class="pricing-grid reveal">
         <div class="hud price-card">
           <div class="plan-name">Starter</div>
-          <div class="plan-price">€49<span>/mes</span></div>
+          <div class="plan-price">49 €<span>/mes</span></div>
           <div class="plan-desc">Para una tienda o equipo pequeño que empieza a centralizar sus datos.</div>
           <ul>
             <li>Hasta 4 módulos activos</li>
@@ -59,13 +60,13 @@
             <li>Actualización diaria</li>
             <li>Soporte por email</li>
           </ul>
-          <button type="button" class="btn btn-ghost btn-block" onclick="openCheckout('Plan Starter', '€49/mes')">Contratar Starter</button>
+          <button type="button" class="btn btn-ghost btn-block" onclick="openCheckout('Plan Starter', '49 €/mes')">Contratar Starter</button>
         </div>
 
         <div class="hud price-card featured">
           <div class="price-badge">Más elegido</div>
           <div class="plan-name">Business</div>
-          <div class="plan-price">€149<span>/mes</span></div>
+          <div class="plan-price">149 €<span>/mes</span></div>
           <div class="plan-desc">Para empresas con varias tiendas, delegaciones o departamentos.</div>
           <ul>
             <li>Todos los módulos</li>
@@ -75,7 +76,7 @@
             <li>Asistente de IA incluido</li>
             <li>Soporte prioritario</li>
           </ul>
-          <button type="button" class="btn btn-primary btn-block" onclick="openCheckout('Plan Business', '€149/mes')">Contratar Business</button>
+          <button type="button" class="btn btn-primary btn-block" onclick="openCheckout('Plan Business', '149 €/mes')">Contratar Business</button>
         </div>
 
         <div class="hud price-card">
@@ -222,7 +223,7 @@
       <div class="pay-plan-summary">
         <div>
           <div class="eyebrow" id="payPlanName">Plan Business</div>
-          <div style="font-size:18px; font-weight:700; color:var(--text);" id="payPlanPrice">€149/mes</div>
+          <div style="font-size:18px; font-weight:700; color:var(--text);" id="payPlanPrice">149 €/mes</div>
         </div>
         <div style="font-size:11px; color:var(--green); background:rgba(62,224,138,0.1); padding:4px 10px; border-radius:20px; border:1px solid var(--panel-border);">
           ● SSL Cifrado 256-bit
@@ -273,7 +274,7 @@
 </div>
 
 <script>
-  let selectedPlanInfo = { name: 'Plan Business', price: '€149/mes' };
+  let selectedPlanInfo = { name: 'Plan Business', price: '149 €/mes' };
 
   function openCheckout(name, price) {
     selectedPlanInfo = { name: name, price: price };

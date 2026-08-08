@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded',function(){
 var heroCockpitData = {
   ventas: {
     status: 'TELEMETRÍA EN VIVO · 12ms',
-    kpi1: { label: 'Facturación Mes', val: '€2.847.654', trend: '▲ +15.3%', sub: 'vs objetivo', bars: [45, 60, 55, 78, 70, 90, 100] },
+    kpi1: { label: 'Facturación Mes', val: '2.847.654 €', trend: '▲ +15.3%', sub: 'vs objetivo', bars: [45, 60, 55, 78, 70, 90, 100] },
     kpi2: { label: 'Margen Bruto', val: '34.8%', trend: '▲ +2.4%', sub: 'rentabilidad', prog: 84 },
     kpi3: { label: 'Nivel de Servicio', val: '98.6%', trend: '● 48 tiendas', sub: 'activas', prog: 98 },
     aiInsight: '💡 <strong>Oportunidad detectada:</strong> Las ventas en el canal Retail superan la previsión un <strong>+15.3%</strong>. Se recomienda incrementar la reposición de stock en la delegación Norte antes del fin de semana.'
@@ -112,7 +112,7 @@ var heroCockpitData = {
     kpi1: { label: 'Clientes Activos', val: '2.409', trend: '▲ +13.1%', sub: 'este mes', bars: [50, 55, 65, 72, 80, 88, 92] },
     kpi2: { label: 'Tasa Retención', val: '89.2%', trend: '▲ +4.5%', sub: 'fidelidad', prog: 89 },
     kpi3: { label: 'Satisfacción NPS', val: '4.8 / 5.0', trend: '● Excelente', sub: 'calidad', prog: 96 },
-    aiInsight: '🎯 <strong>Alerta de fidelización:</strong> El ticket medio en clientes recurrentes ha subido a <strong>€34.50</strong>. 12 clientes estratégicos tienen alta propensión de compra este trimestre.'
+    aiInsight: '🎯 <strong>Alerta de fidelización:</strong> El ticket medio en clientes recurrentes ha subido a <strong>34.50 €</strong>. 12 clientes estratégicos tienen alta propensión de compra este trimestre.'
   }
 };
 

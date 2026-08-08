@@ -1,10 +1,52 @@
 [
   {
+    "id": "log_1786184459014",
+    "timestamp": "2026-08-08T10:20:59.014Z",
+    "user": "demo@empresa.com",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [USER]"
+  },
+  {
+    "id": "log_1786183027364",
+    "timestamp": "2026-08-08T09:57:07.364Z",
+    "user": "demo@empresa.com",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [USER]"
+  },
+  {
+    "id": "log_1786182813481",
+    "timestamp": "2026-08-08T09:53:33.481Z",
+    "user": "demo@empresa.com",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [USER]"
+  },
+  {
+    "id": "log_1786179848039",
+    "timestamp": "2026-08-08T09:04:08.039Z",
+    "user": "demo@empresa.com",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [USER]"
+  },
+  {
+    "id": "log_1786179180424",
+    "timestamp": "2026-08-08T08:53:00.424Z",
+    "user": "admin@centrodemando.ia",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [ADMIN]"
+  },
+  {
+    "id": "log_1786179125364",
+    "timestamp": "2026-08-08T08:52:05.364Z",
+    "user": "demo@empresa.com",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [USER]"
+  },
+  {
     "id": "log_1786096405260",
     "timestamp": "2026-08-07T09:53:25.260Z",
     "user": "demo@empresa.com",
     "action": "RENOVACION_SUSCRIPCION",
-    "detail": "Renovación mensual automática: €156.09 por Plan Business / Pro Mensual. Vence el 6/9/2026"
+    "detail": "Renovación mensual automática: 156.09 € por Plan Business / Pro Mensual. Vence el 6/9/2026"
   },
   {
     "id": "log_1786096405246",
@@ -25,7 +67,7 @@
     "timestamp": "2026-08-07T09:53:21.250Z",
     "user": "admin@centrodemando.ia",
     "action": "RENOVACION_SUSCRIPCION",
-    "detail": "Renovación mensual automática: €361.79 por Plan Enterprise Mensual. Vence el 1/10/2026"
+    "detail": "Renovación mensual automática: 361.79 € por Plan Enterprise Mensual. Vence el 1/10/2026"
   },
   {
     "id": "log_1786096401206",

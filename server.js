@@ -1070,14 +1070,14 @@ app.post('/api/subscription/checkout', requireAuth, (req, res) => {
     addAuditLog(
       user.email,
       'SUSCRIPCION_COBRO_MENSUAL',
-      `Cobro mensual procesado: €${total} por ${name}. Acceso extendido 30 días hasta ${new Date(newPeriodEnd).toLocaleDateString('es-ES')}`
+      `Cobro mensual procesado: ${total} € por ${name}. Acceso extendido 30 días hasta ${new Date(newPeriodEnd).toLocaleDateString('es-ES')}`
     );
 
     const updatedSub = computeSubscriptionDetails(user);
 
     res.json({
       success: true,
-      message: `¡Pago de €${total} completado con éxito! Tu acceso al panel ha sido ampliado 30 días.`,
+      message: `¡Pago de ${total} € completado con éxito! Tu acceso al panel ha sido ampliado 30 días.`,
       subscription: updatedSub,
       invoice: newInvoice,
       invoices: user.subscription.invoices
@@ -1145,7 +1145,7 @@ app.post('/api/subscription/renew', requireAuth, (req, res) => {
     addAuditLog(
       user.email,
       'RENOVACION_SUSCRIPCION',
-      `Renovación mensual automática: €${total} por ${name}. Vence el ${new Date(newPeriodEnd).toLocaleDateString('es-ES')}`
+      `Renovación mensual automática: ${total} € por ${name}. Vence el ${new Date(newPeriodEnd).toLocaleDateString('es-ES')}`
     );
 
     res.json({
@@ -1460,7 +1460,7 @@ app.post('/api/dashboard/upload-excel', requireAuth, (req, res) => {
     addAuditLog(
       req.user.email,
       'IMPORTAR_EXCEL',
-      `Hoja [${fileName || 'datos-empresa.xlsx'}] procesada para delegación ${department}. Nuevas ventas: €${newSales.toLocaleString()}`
+      `Hoja [${fileName || 'datos-empresa.xlsx'}] procesada para delegación ${department}. Nuevas ventas: ${newSales.toLocaleString()} €`
     );
 
     res.json({
@@ -1515,10 +1515,10 @@ app.post('/api/dashboard/ai-analysis', requireAuth, async (req, res) => {
 
     const contextSummary = `
 Datos en tiempo real de la empresa (${user.company}, departamento: ${user.department}, rol de usuario: ${user.role}):
-- Ventas Totales: €${metrics.kpis.ventasTotales.toLocaleString()} (${metrics.kpis.ventasDelta > 0 ? '+' : ''}${metrics.kpis.ventasDelta}%)
-- Beneficio Neto: €${metrics.kpis.beneficioNeto.toLocaleString()} (+${metrics.kpis.beneficioDelta}%)
+- Ventas Totales: ${metrics.kpis.ventasTotales.toLocaleString()} € (${metrics.kpis.ventasDelta > 0 ? '+' : ''}${metrics.kpis.ventasDelta}%)
+- Beneficio Neto: ${metrics.kpis.beneficioNeto.toLocaleString()} € (+${metrics.kpis.beneficioDelta}%)
 - Pedidos: ${metrics.kpis.pedidosTotales.toLocaleString()}
-- Ticket Medio: €${metrics.kpis.ticketMedio}
+- Ticket Medio: ${metrics.kpis.ticketMedio} €
 - Satisfacción Clientes NPS: ${metrics.kpis.satisfaccionNps}%
 - Nivel de Servicio: ${metrics.kpis.nivelServicio}%
 - Retrasos Logísticos: ${metrics.kpis.retrasosLogistica}%
@@ -1559,14 +1559,14 @@ Datos en tiempo real de la empresa (${user.company}, departamento: ${user.depart
     if (user.role === 'admin') {
       fallbackAnalysis = `**Resumen Ejecutivo de Dirección (Centro de Mando IA)**
 
-• **Salud Global**: Facturación consolidada en **€${metrics.kpis.ventasTotales.toLocaleString()}** con crecimiento intermensual del **+${metrics.kpis.ventasDelta}%**. El margen neto se sitúa en un sólido **11%**.
+• **Salud Global**: Facturación consolidada en **${metrics.kpis.ventasTotales.toLocaleString()} €** con crecimiento intermensual del **+${metrics.kpis.ventasDelta}%**. El margen neto se sitúa en un sólido **11%**.
 • **Operaciones y Calidad**: El nivel de servicio global alcanza el **${metrics.kpis.nivelServicio}%**, con satisfacción de clientes en un excelente **${metrics.kpis.satisfaccionNps}%**.
 • **Foco Estratégico**: La delegación Sur presenta un **${metrics.regionalDelays.find(r => r.region === 'Sur')?.delay}%** de retrasos logísticos. Se aconseja redistribuir stock hacia el hub central.
 • **Sostenibilidad ESG**: Reducción de huella de carbono de **${metrics.kpis.huellaCarbonoDelta}%** frente al periodo anterior, cumpliendo con los objetivos de reporte no financiero.`;
     } else {
       fallbackAnalysis = `**Informe Operativo de Área (${user.department})**
 
-• **Rendimiento de Ventas & Pedidos**: Se han registrado **${metrics.kpis.pedidosTotales.toLocaleString()} pedidos** con un ticket medio de **€${metrics.kpis.ticketMedio}**.
+• **Rendimiento de Ventas & Pedidos**: Se han registrado **${metrics.kpis.pedidosTotales.toLocaleString()} pedidos** con un ticket medio de **${metrics.kpis.ticketMedio} €**.
 • **Nivel de Servicio**: **${metrics.kpis.nivelServicio}%** de entregas a tiempo. La delegación Este lidera con un **99.2%**.
 • **Acción Prioritaria**: Monitorear las rutas de la zona Sur durante los picos de pedidos para evitar cuellos de botella en entrega.
 • **Integración**: Tus módulos de Excel y Power BI se encuentran sincronizados y listos para consulta.`;
@@ -1594,9 +1594,9 @@ Información clave sobre el producto:
   * ERPs y CRMs (Plan Enterprise): Conexión directa con SAP, Navision, Holded, Salesforce, HubSpot y bases de datos SQL mediante API.
 - **Módulos**: Ventas y facturación, Clientes y retención, Operaciones y nivel de servicio, Cadena de suministro y stock, Sostenibilidad (ESG y huella de carbono), Talento y rotación.
 - **Planes y Precios**:
-  * Starter (€49/mes): Hasta 4 módulos activos, importación Excel, 1 usuario, actualización diaria, soporte por email.
-  * Pro (€129/mes - Más popular): Los 10 módulos, conexión Excel y Power BI, hasta 5 usuarios, alertas del Asistente IA, soporte prioritario.
-  * Enterprise (€299/mes): Multiempresa con delegaciones, conectores ERP/CRM/API a medida, usuarios ilimitados, actualización en tiempo real, SLA garantizado y soporte dedicado.
+  * Starter (49 €/mes): Hasta 4 módulos activos, importación Excel, 1 usuario, actualización diaria, soporte por email.
+  * Pro (129 €/mes - Más popular): Los 10 módulos, conexión Excel y Power BI, hasta 5 usuarios, alertas del Asistente IA, soporte prioritario.
+  * Enterprise (299 €/mes): Multiempresa con delegaciones, conectores ERP/CRM/API a medida, usuarios ilimitados, actualización en tiempo real, SLA garantizado y soporte dedicado.
 - **Seguridad**: Servidores seguros en la Unión Europea (UE), cifrado SSL/TLS de extremo a extremo, cumplimiento estricto del RGPD (GDPR).`;
 
 let aiClient = null;
@@ -1631,9 +1631,9 @@ function generateFallbackResponse(userMessage, history = []) {
   if (msg.includes('precio') || msg.includes('plan') || msg.includes('cuanto cuesta') || msg.includes('tarifa')) {
     return `Disponemos de tres planes adaptados al tamaño de cada empresa:
 
-• **Starter (€49/mes)**: Hasta 4 módulos activos, importación desde Excel y 1 usuario.
-• **Pro (€129/mes)**: 10 módulos, conexión con Excel y Power BI, hasta 5 usuarios y alertas proactivas de IA.
-• **Enterprise (€299/mes)**: Multiempresa, conectores API/ERP (SAP, Salesforce, etc.), usuarios ilimitados y tiempo real.
+• **Starter (49 €/mes)**: Hasta 4 módulos activos, importación desde Excel y 1 usuario.
+• **Pro (129 €/mes)**: 10 módulos, conexión con Excel y Power BI, hasta 5 usuarios y alertas proactivas de IA.
+• **Enterprise (299 €/mes)**: Multiempresa, conectores API/ERP (SAP, Salesforce, etc.), usuarios ilimitados y tiempo real.
 
 Puedes consultar todos los detalles en nuestra sección de [Precios](precios.html).`;
   }
@@ -1659,7 +1659,7 @@ Puedes consultar todos los detalles en nuestra sección de [Precios](precios.htm
 Puedo ayudarte con:
 • **Registro y Panel**: Cómo crear tu cuenta, roles de administrador y panel en vivo.
 • **Integración**: Conexión con Excel, Power BI y ERPs.
-• **Precios y Módulos**: Planes Starter (€49), Pro (€129) y Enterprise (€299).
+• **Precios y Módulos**: Planes Starter (49 €), Pro (129 €) y Enterprise (299 €).
 • **Seguridad**: Cifrado, RGPD y servidores en la Unión Europea.
 
 ¿Qué te gustaría consultar o probar?`;

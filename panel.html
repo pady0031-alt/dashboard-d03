@@ -220,6 +220,11 @@
   .cfg-card-desc{font-size:10px;color:var(--text-dim);margin-top:2px;}
   .cfg-toggle-btn{cursor:pointer;}
   @media (max-width:600px){.cfg-grid{grid-template-columns:1fr;}}
+   .cfg-tabs{display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid var(--panel-border);padding-bottom:10px;}
+   .cfg-tab{background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:6px;padding:6px 12px;font-size:11px;color:var(--text-dim);cursor:pointer;font-weight:600;}
+   .cfg-tab.active{background:rgba(62,224,138,0.12);color:var(--text);border-color:var(--panel-border-strong);}
+   .cfg-tab-pane{display:none;}
+   .cfg-tab-pane.active{display:block;}
 </style>
 </head>
 <body>
@@ -393,9 +398,9 @@
 
     <div style="margin-bottom:12px; padding:10px; background:rgba(62,224,138,0.04); border:1px solid var(--panel-border); border-radius:8px;">
       <div class="eyebrow" style="margin-bottom:6px; color:var(--green);">Consultar Asistente IA</div>
-      <div style="display:flex; gap:6px; margin-bottom:6px;">
-        <input type="text" id="aiChatInput" placeholder="Ej: ¿Cómo optimizar costes?" style="flex:1; background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:6px; padding:6px 8px; color:var(--text); font-size:11px;">
-        <button type="button" id="aiSendBtn" style="background:var(--green-dim); border:none; border-radius:6px; color:var(--text); padding:6px 10px; cursor:pointer; font-size:11px; font-weight:600;">Preguntar</button>
+      <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:6px;">
+        <input type="text" id="aiChatInput" placeholder="¿Cómo optimizar costes?" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:6px; padding:8px 10px; color:var(--text); font-size:11px;">
+        <button type="button" id="aiSendBtn" style="width:100%; background:var(--green-dim); border:none; border-radius:6px; color:var(--text); padding:8px 10px; cursor:pointer; font-size:11px; font-weight:600; text-align:center;">Preguntar</button>
       </div>
       <div id="aiChatResponse" style="font-size:11px; color:var(--text); max-height:180px; overflow-y:auto; line-height:1.4; display:none; background:rgba(0,0,0,0.4); padding:8px; border-radius:6px; border:1px solid var(--panel-border); white-space:pre-line;"></div>
     </div>
@@ -427,11 +432,69 @@
   <div class="cfg-overlay" id="cfgOverlay">
     <div class="cfg-modal">
       <div class="cfg-head">
-        <h2>Configurar módulos</h2>
+        <h2>Panel de Configuración</h2>
         <span class="cfg-close" id="cfgCloseBtn">✕</span>
       </div>
-      <div class="cfg-sub">Activa o desactiva cada módulo para personalizar tu centro de mando.</div>
-      <div class="cfg-grid" id="cfgGrid"></div>
+      <div class="cfg-tabs">
+        <div class="cfg-tab active" data-tab="modules">Módulos del Dashboard</div>
+        <div class="cfg-tab" data-tab="alerts">Alertas y Notificaciones IA</div>
+      </div>
+      
+      <!-- Pane 1: Modules -->
+      <div class="cfg-tab-pane active" id="paneModules">
+        <div class="cfg-sub">Activa o desactiva cada módulo para personalizar tu centro de mando.</div>
+        <div class="cfg-grid" id="cfgGrid"></div>
+      </div>
+
+      <!-- Pane 2: AI Alerts & Notifications -->
+      <div class="cfg-tab-pane" id="paneAlerts">
+        <div class="cfg-sub">Configura cómo y cuándo deseas recibir alertas automáticas e insights generados por la IA.</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-size:12px;font-weight:600;">Alertas por Correo Electrónico</div>
+              <div style="font-size:10px;color:var(--text-dim);">Recibe informes ejecutivos diarios y avisos de riesgos críticos</div>
+            </div>
+            <span class="toggle on" id="alertEmailToggle" data-alert-toggle="email" style="cursor:pointer;"></span>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:12px;font-weight:600;margin-bottom:6px;">Correo de Notificación</div>
+            <input type="email" id="alertEmailInput" style="width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;font-family:inherit;" value="roberto@logisticaglobal.es">
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;">
+            <div>
+              <div style="font-size:12px;font-weight:600;">Notificaciones Push del Navegador</div>
+              <div style="font-size:10px;color:var(--text-dim);">Avisos flotantes instantáneos cuando la IA detecte anomalías</div>
+            </div>
+            <span class="toggle on" id="alertPushToggle" data-alert-toggle="push" style="cursor:pointer;"></span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px 14px;">
+              <div style="font-size:12px;font-weight:600;margin-bottom:6px;">Frecuencia de Envío</div>
+              <select id="alertFreqSelect" style="width:100%;background:rgba(0,0,0,0.5);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:11px;">
+                <option value="inmediata">Inmediata (En tiempo real)</option>
+                <option value="diaria" selected>Resumen diario (08:00 AM)</option>
+                <option value="semanal">Resumen semanal</option>
+              </select>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px 14px;">
+              <div style="font-size:12px;font-weight:600;margin-bottom:6px;">Filtro de Severidad</div>
+              <select id="alertSeveritySelect" style="width:100%;background:rgba(0,0,0,0.5);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:11px;">
+                <option value="todos">Todos los insights y oportunidades</option>
+                <option value="criticos" selected>Solo riesgos críticos y atenciones</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+            <div id="alertSaveToast" style="font-size:11px;color:var(--green);display:none;">✓ Preferencias guardadas correctamente.</div>
+            <button type="button" id="alertSaveBtn" class="cfg-btn" style="background:var(--green-dim);color:var(--text);border:none;padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;margin-left:auto;">Guardar Alertas IA</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -520,10 +583,10 @@
   document.getElementById("weatherDesc").textContent="Despejado";
 
   var kpis=[
-    ["Ventas totales","€2.847.654","▲ 15.3%",true],
-    ["Beneficio neto","€312.456","▲ 14.2%",true],
+    ["Ventas totales","2.847.654 €","▲ 15.3%",true],
+    ["Beneficio neto","312.456 €","▲ 14.2%",true],
     ["Pedidos totales","18.245","▲ 12.5%",true],
-    ["Ticket medio","€23.45","▲ 8.7%",true],
+    ["Ticket medio","23.45 €","▲ 8.7%",true],
     ["Clientes activos","2.409","▲ 13.1%",true],
     ["Tiendas activas","152","▲ 3.4%",true],
     ["Satisfacción","4.8/5","▲ 9.1%",true],
@@ -697,6 +760,71 @@
     askAiAssistant(randomQuery);
     setTimeout(function() {
       document.getElementById('micLabel').textContent = 'Pulsa para hablar / dictar';
+    }, 4000);
+  });
+
+  /* ---------- CONFIG MODAL TABS & ALERTS ---------- */
+  document.querySelectorAll('.cfg-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.cfg-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.cfg-tab-pane').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      var target = this.getAttribute('data-tab');
+      if (target === 'modules') {
+        document.getElementById('paneModules').classList.add('active');
+      } else if (target === 'alerts') {
+        document.getElementById('paneAlerts').classList.add('active');
+      }
+    });
+  });
+
+  // Alert toggles
+  document.querySelectorAll('[data-alert-toggle]').forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      this.classList.toggle('on');
+      this.classList.toggle('off');
+    });
+  });
+
+  // Load saved alert prefs if any
+  try {
+    var savedAlerts = localStorage.getItem('cma_alert_prefs');
+    if (savedAlerts) {
+      var prefs = JSON.parse(savedAlerts);
+      if (prefs.email !== undefined) {
+        var emailToggle = document.getElementById('alertEmailToggle');
+        emailToggle.className = 'toggle ' + (prefs.email ? 'on' : 'off');
+      }
+      if (prefs.emailAddr) {
+        document.getElementById('alertEmailInput').value = prefs.emailAddr;
+      }
+      if (prefs.push !== undefined) {
+        var pushToggle = document.getElementById('alertPushToggle');
+        pushToggle.className = 'toggle ' + (prefs.push ? 'on' : 'off');
+      }
+      if (prefs.freq) {
+        document.getElementById('alertFreqSelect').value = prefs.freq;
+      }
+      if (prefs.severity) {
+        document.getElementById('alertSeveritySelect').value = prefs.severity;
+      }
+    }
+  } catch(e) {}
+
+  document.getElementById('alertSaveBtn').addEventListener('click', function() {
+    var emailOn = document.getElementById('alertEmailToggle').classList.contains('on');
+    var emailAddr = document.getElementById('alertEmailInput').value.trim();
+    var pushOn = document.getElementById('alertPushToggle').classList.contains('on');
+    var freq = document.getElementById('alertFreqSelect').value;
+    var severity = document.getElementById('alertSeveritySelect').value;
+
+    var prefs = { email: emailOn, emailAddr: emailAddr, push: pushOn, freq: freq, severity: severity };
+    localStorage.setItem('cma_alert_prefs', JSON.stringify(prefs));
+
+    var toast = document.getElementById('alertSaveToast');
+    toast.style.display = 'block';
+    setTimeout(function() {
+      toast.style.display = 'none';
     }, 4000);
   });
 </script>
