@@ -1,0 +1,8 @@
+{
+  "name": "Centro de Mando IA",
+  "description": "Un único panel en tiempo real para ventas, operaciones, clientes y sostenibilidad, con un asistente de IA que prioriza lo importante.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

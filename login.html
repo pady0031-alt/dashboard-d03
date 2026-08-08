@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar Sesión — Centro de Mando IA</title>
+<meta name="description" content="Inicia sesión en tu cuenta del Centro de Mando IA. Accede a tu panel en vivo con roles de Administrador o Usuario.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="container nav-row">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">GR</div>
+      <div class="brand-text">Centro de Mando IA<span>GONZALO ROSENDO · DATA &amp; FORMATION</span></div>
+    </a>
+    <nav class="links">
+      <a href="index.html">Inicio</a>
+      <a href="caracteristicas.html">Características</a>
+      <a href="precios.html">Precios</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="registro.html">Registro</a>
+      <div class="mobile-menu-cta">
+        <a href="registro.html" class="btn btn-ghost">Registrarse</a>
+        <a href="panel.html" class="btn btn-primary">Acceder al Panel</a>
+      </div>
+    </nav>
+    <div class="nav-cta">
+      <a href="registro.html" class="btn btn-ghost">Registrarse</a>
+      <a href="panel.html" class="btn btn-primary">Acceder al Panel</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="auth-wrapper">
+  <div class="grid-bg"></div>
+
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="role-badge-tag admin">Acceso Seguro</span>
+      <h1>Iniciar Sesión</h1>
+      <p>Introduce tus credenciales corporativas para acceder al Centro de Mando.</p>
+    </div>
+
+    <div id="loginAlert" class="form-feedback"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginEmail">Correo Electrónico *</label>
+        <input type="email" id="loginEmail" class="form-input" placeholder="nombre@tuempresa.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Contraseña *</label>
+        <input type="password" id="loginPassword" class="form-input" placeholder="••••••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="btnSubmitLogin" style="margin-top:10px;">
+        <span>Acceder al Panel de Control</span>
+        <span>→</span>
+      </button>
+    </form>
+
+    <!-- Accesos Directos 1-Clic para Probar los Roles -->
+    <div class="quick-auth-box">
+      <div class="quick-auth-title">O entra con 1 clic usando una cuenta de prueba:</div>
+      <div class="quick-auth-buttons">
+        <button type="button" class="btn-demo" onclick="fillAndLogin('admin@centrodemando.ia', 'admin123', 'admin')">
+          <span class="role-name">🛡️ Rol Administrador</span>
+          <span class="user-sub">admin@centrodemando.ia</span>
+        </button>
+        <button type="button" class="btn-demo" onclick="fillAndLogin('demo@empresa.com', 'user123', 'user')">
+          <span class="role-name">👤 Rol Usuario / Operativo</span>
+          <span class="user-sub">demo@empresa.com</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:20px; font-size:13px; color:var(--text-dim);">
+      ¿Aún no tienes cuenta en el sistema? <a href="registro.html" style="color:var(--green); font-weight:600;">Regístrate gratis aquí →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="container foot-btm">
+    <div class="copy">Centro de Mando IA · Autenticación y Control de Roles · Cifrado SSL/TLS</div>
+    <div class="foot-links">
+      <a href="panel.html">Panel en Vivo</a>
+      <a href="registro.html">Crear Cuenta</a>
+      <a href="contacto.html">Soporte</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Check if user already logged in
+window.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('cma_token');
+  const user = localStorage.getItem('cma_user');
+  if (token && user) {
+    // Optionally alert or allow fast-enter
+  }
+});
+
+function fillAndLogin(email, password, role) {
+  document.getElementById('loginEmail').value = email;
+  document.getElementById('loginPassword').value = password;
+  doLogin(email, password);
+}
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  doLogin(email, password);
+});
+
+async function doLogin(email, password) {
+  const alertBox = document.getElementById('loginAlert');
+  const btn = document.getElementById('btnSubmitLogin');
+  alertBox.className = 'form-feedback';
+  alertBox.style.display = 'none';
+
+  btn.disabled = true;
+  btn.innerHTML = '<span>Verificando credenciales...</span>';
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alertBox.textContent = data.error || 'Credenciales no válidas.';
+      alertBox.className = 'form-feedback error';
+      btn.disabled = false;
+      btn.innerHTML = '<span>Acceder al Panel de Control</span> <span>→</span>';
+      return;
+    }
+
+    localStorage.setItem('cma_token', data.token);
+    localStorage.setItem('cma_user', JSON.stringify(data.user));
+
+    alertBox.textContent = `¡Bienvenido/a, ${data.user.name}! Accediendo con rol [${data.user.role.toUpperCase()}]...`;
+    alertBox.className = 'form-feedback success';
+
+    setTimeout(() => {
+      window.location.href = 'panel.html';
+    }, 600);
+
+  } catch (err) {
+    console.error('Login error:', err);
+    alertBox.textContent = 'Error de conexión con el servidor. Inténtalo de nuevo.';
+    alertBox.className = 'form-feedback error';
+    btn.disabled = false;
+    btn.innerHTML = '<span>Acceder al Panel de Control</span> <span>→</span>';
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Precios — Centro de Mando IA</title>
+<meta name="description" content="Planes Starter, Business y Enterprise para el Centro de Mando IA. Elige el que se ajuste al tamaño de tu equipo.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="container nav-row">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">GR</div>
+      <div class="brand-text">Centro de Mando IA<span>GONZALO ROSENDO · DATA &amp; FORMATION</span></div>
+    </a>
+    <nav class="links">
+      <a href="index.html">Inicio</a>
+      <a href="caracteristicas.html">Características</a>
+      <a href="precios.html" class="active">Precios</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="registro.html">Registro</a>
+      <div class="mobile-menu-cta">
+        <a href="login.html" class="btn btn-ghost">Iniciar Sesión</a>
+        <a href="panel.html" class="btn btn-primary">Acceder al Panel</a>
+      </div>
+    </nav>
+    <div class="nav-cta">
+      <a href="login.html" class="btn btn-ghost">Iniciar sesión</a>
+      <a href="panel.html" class="btn btn-primary">Acceder al Panel</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="page-hero" style="text-align:center;">
+    <div class="grid-bg"></div>
+    <div class="container">
+      <div class="eyebrow" style="justify-content:center;">Precios</div>
+      <h1 style="max-width:none;margin:14px auto 0;">Un plan para cada tamaño de equipo.</h1>
+      <p class="lead" style="margin:14px auto 0;text-align:center;">Sin permanencia. Cambia de plan cuando tu empresa crezca.</p>
+    </div>
+  </section>
+
+  <section class="section-pad" style="padding-top:20px;">
+    <div class="container">
+      <div class="pricing-grid reveal">
+        <div class="hud price-card">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">€49<span>/mes</span></div>
+          <div class="plan-desc">Para una tienda o equipo pequeño que empieza a centralizar sus datos.</div>
+          <ul>
+            <li>Hasta 4 módulos activos</li>
+            <li>Importación desde Excel</li>
+            <li>1 usuario</li>
+            <li>Actualización diaria</li>
+            <li>Soporte por email</li>
+          </ul>
+          <button type="button" class="btn btn-ghost btn-block" onclick="openCheckout('Plan Starter', '€49/mes')">Contratar Starter</button>
+        </div>
+
+        <div class="hud price-card featured">
+          <div class="price-badge">Más elegido</div>
+          <div class="plan-name">Business</div>
+          <div class="plan-price">€149<span>/mes</span></div>
+          <div class="plan-desc">Para empresas con varias tiendas, delegaciones o departamentos.</div>
+          <ul>
+            <li>Todos los módulos</li>
+            <li>Importación Excel + Power BI</li>
+            <li>Hasta 10 usuarios</li>
+            <li>Actualización en tiempo real</li>
+            <li>Asistente de IA incluido</li>
+            <li>Soporte prioritario</li>
+          </ul>
+          <button type="button" class="btn btn-primary btn-block" onclick="openCheckout('Plan Business', '€149/mes')">Contratar Business</button>
+        </div>
+
+        <div class="hud price-card">
+          <div class="plan-name">Enterprise</div>
+          <div class="plan-price">A medida</div>
+          <div class="plan-desc">Para grupos y cadenas con necesidades específicas de integración.</div>
+          <ul>
+            <li>Usuarios ilimitados</li>
+            <li>Integraciones a medida</li>
+            <li>Multiempresa y permisos avanzados</li>
+            <li>Gestor de cuenta dedicado</li>
+            <li>Acuerdo de nivel de servicio (SLA)</li>
+          </ul>
+          <a href="contacto.html" class="btn btn-ghost btn-block">Hablar con ventas</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section class="section-pad" style="padding-top:0;">
+    <div class="container">
+      <div class="hud reveal" style="padding:12px 16px;">
+        <div class="table-responsive">
+          <table style="width:100%;border-collapse:collapse;min-width:560px;">
+          <thead>
+            <tr style="text-align:left;">
+              <th style="padding:16px;font-family:var(--font-mono);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;">Comparativa</th>
+              <th style="padding:16px;font-family:var(--font-mono);font-size:12px;">Starter</th>
+              <th style="padding:16px;font-family:var(--font-mono);font-size:12px;color:var(--green);">Business</th>
+              <th style="padding:16px;font-family:var(--font-mono);font-size:12px;">Enterprise</th>
+            </tr>
+          </thead>
+          <tbody style="font-size:13px;color:var(--text-dim);">
+            <tr style="border-top:1px solid var(--panel-border);"><td style="padding:14px 16px;">Módulos activos</td><td style="padding:14px 16px;">Hasta 4</td><td style="padding:14px 16px;">Todos</td><td style="padding:14px 16px;">Todos + a medida</td></tr>
+            <tr style="border-top:1px solid var(--panel-border);"><td style="padding:14px 16px;">Importación Excel</td><td style="padding:14px 16px;">✓</td><td style="padding:14px 16px;">✓</td><td style="padding:14px 16px;">✓</td></tr>
+            <tr style="border-top:1px solid var(--panel-border);"><td style="padding:14px 16px;">Conexión Power BI</td><td style="padding:14px 16px;">—</td><td style="padding:14px 16px;">✓</td><td style="padding:14px 16px;">✓</td></tr>
+            <tr style="border-top:1px solid var(--panel-border);"><td style="padding:14px 16px;">Asistente de IA</td><td style="padding:14px 16px;">—</td><td style="padding:14px 16px;">✓</td><td style="padding:14px 16px;">✓</td></tr>
+            <tr style="border-top:1px solid var(--panel-border);"><td style="padding:14px 16px;">Usuarios</td><td style="padding:14px 16px;">1</td><td style="padding:14px 16px;">Hasta 10</td><td style="padding:14px 16px;">Ilimitados</td></tr>
+            <tr style="border-top:1px solid var(--panel-border);"><td style="padding:14px 16px;">Soporte</td><td style="padding:14px 16px;">Email</td><td style="padding:14px 16px;">Prioritario</td><td style="padding:14px 16px;">Gestor dedicado</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-pad" style="padding-top:0;">
+    <div class="container" style="max-width:760px;">
+      <div class="section-head reveal">
+        <div class="eyebrow">Preguntas frecuentes</div>
+        <h2 style="font-size:24px;">Integración, seguridad y uso</h2>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Cómo se conecta el Centro de Mando con mis hojas de Excel o Power BI?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Descargas nuestra plantilla estructurada de Excel, cargas tus cifras y la subes para una actualización inmediata. Para Power BI, pegas el enlace de tu informe publicado para unificarlo en una sola pantalla con el resto de tus datos.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Se pueden integrar ERPs, CRMs o bases de datos a medida?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Sí. En el plan Enterprise disponemos de conectores y APIs para enlazar directamente tus sistemas (SAP, Navision, Holded, Salesforce, HubSpot o SQL) con sincronización automatizada.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Cómo se garantiza la seguridad y privacidad de mis datos?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Toda la información se transmite cifrada con SSL/TLS y se aloja en la Unión Europea cumpliendo el RGPD. Tus datos empresariales son 100% privados y no se comparten con terceros ni se usan para entrenar IA pública.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Cómo funcionan los permisos de acceso y el modo multiempresa?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Puedes configurar roles por usuario, tienda o departamento. Cada responsable visualiza exclusivamente las métricas y módulos asignados a su ámbito de gestión.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Cuánto tiempo se requiere para poner en marcha el panel?<span class="plus">+</span></div>
+        <div class="faq-a"><p>La puesta en marcha se realiza en menos de un día: seleccionas los módulos necesarios e importas tu primer archivo de datos, sin esperas de desarrollo ni instalaciones técnicas.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Qué ventajas ofrece el Asistente de IA en el día a día?<span class="plus">+</span></div>
+        <div class="faq-a"><p>El asistente detecta anomalías en tus KPIs clave (ventas, stock, márgenes, satisfacción) y genera resúmenes claros con alertas y sugerencias accionables antes de que surjan problemas.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Puedo cambiar de plan o solicitar una prueba previa?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Sí, puedes cambiar de plan en cualquier momento sin permanencia y solicitar una demostración personalizada con tus propios datos antes de contratar.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container reveal">
+      <div class="eyebrow" style="justify-content:center;">¿Dudas sobre qué plan elegir?</div>
+      <h2>Hablamos 15 minutos y te lo decimos.</h2>
+      <div class="cta-row">
+        <a href="contacto.html" class="btn btn-primary">Solicitar demo →</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="brand" style="margin-bottom:14px;">
+          <div class="brand-mark">GR</div>
+          <div class="brand-text">Centro de Mando IA<span>GONZALO ROSENDO · DATA &amp; FORMATION</span></div>
+        </div>
+        <p>Paneles de control con IA para empresas que quieren decidir con datos, no con intuición.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Producto</h5>
+        <a href="caracteristicas.html">Características</a>
+        <a href="precios.html">Precios</a>
+        <a href="contacto.html">Solicitar demo</a>
+      </div>
+      <div class="footer-col">
+        <h5>Empresa</h5>
+        <a href="contacto.html">Contacto</a>
+        <p>Sevilla, España</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contacto</h5>
+        <p>hola@centrodemando.ia</p>
+        <p>+34 900 000 000</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Gonzalo Rosendo — Data &amp; Formation</span>
+      <span>Centro de Mando IA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+
+<!-- SIMULATED PAYMENT MODAL -->
+<div class="pay-overlay" id="payOverlay">
+  <div class="pay-modal">
+    <div class="pay-head">
+      <h2 id="payModalTitle">Pasarela de Pago Segura</h2>
+      <button type="button" class="pay-close" onclick="closeCheckout()">✕</button>
+    </div>
+    
+    <div id="payFormContainer">
+      <div class="pay-plan-summary">
+        <div>
+          <div class="eyebrow" id="payPlanName">Plan Business</div>
+          <div style="font-size:18px; font-weight:700; color:var(--text);" id="payPlanPrice">€149/mes</div>
+        </div>
+        <div style="font-size:11px; color:var(--green); background:rgba(62,224,138,0.1); padding:4px 10px; border-radius:20px; border:1px solid var(--panel-border);">
+          ● SSL Cifrado 256-bit
+        </div>
+      </div>
+
+      <form id="simulatedPaymentForm" onsubmit="processSimulatedPayment(event)">
+        <div class="pay-form-group">
+          <label>Titular de la tarjeta</label>
+          <input type="text" class="pay-input" id="payName" value="Roberto Sánchez (Logística Global)" required>
+        </div>
+
+        <div class="pay-form-group">
+          <label>Correo electrónico corporativo</label>
+          <input type="email" class="pay-input" id="payEmail" value="roberto@logisticaglobal.es" required>
+        </div>
+
+        <div class="pay-form-group">
+          <label>Número de tarjeta simulada</label>
+          <input type="text" class="pay-input" id="payCard" value="4242 •••• •••• 4242" required>
+        </div>
+
+        <div class="pay-grid-row">
+          <div class="pay-form-group">
+            <label>Caducidad (MM/AA)</label>
+            <input type="text" class="pay-input" id="payExp" value="12/28" required>
+          </div>
+          <div class="pay-form-group">
+            <label>CVV</label>
+            <input type="text" class="pay-input" id="payCvv" value="921" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="paySubmitBtn" style="margin-top:16px;">
+          <span>Pagar y Activar Mi Dashboard</span>
+          <span>→</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="pay-success-box" id="paySuccessBox">
+      <div class="pay-success-icon">✓</div>
+      <h3 style="font-size:18px; margin-bottom:8px; color:var(--text);">¡Pago simulado completado con éxito!</h3>
+      <p style="font-size:13px; color:var(--text-dim); margin-bottom:20px;">Suscripción activada correctamente. Tu cuenta está lista para operar.</p>
+      <div style="font-size:12px; color:var(--green); font-weight:600;" id="redirectCountdown">Accediendo al Centro de Mando en 2 segundos...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let selectedPlanInfo = { name: 'Plan Business', price: '€149/mes' };
+
+  function openCheckout(name, price) {
+    selectedPlanInfo = { name: name, price: price };
+    document.getElementById('payPlanName').textContent = name;
+    document.getElementById('payPlanPrice').textContent = price;
+    document.getElementById('payFormContainer').style.display = 'block';
+    document.getElementById('paySuccessBox').style.display = 'none';
+    document.getElementById('payOverlay').classList.add('open');
+  }
+
+  function closeCheckout() {
+    document.getElementById('payOverlay').classList.remove('open');
+  }
+
+  function processSimulatedPayment(e) {
+    e.preventDefault();
+    const btn = document.getElementById('paySubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span>Procesando pago con pasarela bancaria...</span>';
+
+    setTimeout(() => {
+      document.getElementById('payFormContainer').style.display = 'none';
+      document.getElementById('paySuccessBox').style.display = 'block';
+
+      let secs = 2;
+      const countEl = document.getElementById('redirectCountdown');
+      const timer = setInterval(() => {
+        secs--;
+        if (secs > 0) {
+          countEl.textContent = 'Accediendo al Centro de Mando en ' + secs + ' segundos...';
+        } else {
+          clearInterval(timer);
+          window.location.href = 'panel.html';
+        }
+      }, 1000);
+    }, 1500);
+  }
+
+  // Cerrar modal al hacer clic fuera
+  document.getElementById('payOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeCheckout();
+  });
+</script>
+</body>
+</html>

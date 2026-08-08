@@ -1,0 +1,16 @@
+{
+  "name": "centro-de-mando-ia",
+  "version": "1.0.0",
+  "description": "Centro de Mando IA — El panel de control de tu empresa",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "lint": "echo 'No lint script required'",
+    "build": "echo 'Static app ready'"
+  },
+  "dependencies": {
+    "@google/genai": "^2.16.0",
+    "express": "^4.21.2"
+  }
+}

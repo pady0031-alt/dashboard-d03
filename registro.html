@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Usuarios y Roles — Centro de Mando IA</title>
+<meta name="description" content="Crea tu cuenta de Administrador o Usuario en Centro de Mando IA y accede al panel en tiempo real para tu empresa.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="container nav-row">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">GR</div>
+      <div class="brand-text">Centro de Mando IA<span>GONZALO ROSENDO · DATA &amp; FORMATION</span></div>
+    </a>
+    <nav class="links">
+      <a href="index.html">Inicio</a>
+      <a href="caracteristicas.html">Características</a>
+      <a href="precios.html">Precios</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="registro.html" class="active">Registro</a>
+      <div class="mobile-menu-cta">
+        <a href="login.html" class="btn btn-ghost">Iniciar Sesión</a>
+        <a href="panel.html" class="btn btn-primary">Acceder al Panel</a>
+      </div>
+    </nav>
+    <div class="nav-cta">
+      <a href="login.html" class="btn btn-ghost">Iniciar sesión</a>
+      <a href="panel.html" class="btn btn-primary">Acceder al Panel</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="auth-wrapper">
+  <div class="grid-bg"></div>
+
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="role-badge-tag user">Acceso Corporativo</span>
+      <h1>Crear Cuenta de Usuario</h1>
+      <p>Configura tu acceso y selecciona tu rol para acceder al Centro de Mando.</p>
+    </div>
+
+    <div id="authAlert" class="form-feedback"></div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="regName">Nombre Completo *</label>
+        <input type="text" id="regName" class="form-input" placeholder="Ej. Roberto Sánchez" required>
+      </div>
+
+      <div class="form-group">
+        <label for="regEmail">Correo Electrónico Corporativo *</label>
+        <input type="email" id="regEmail" class="form-input" placeholder="nombre@tuempresa.com" required>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="form-group">
+          <label for="regCompany">Empresa / Organización *</label>
+          <input type="text" id="regCompany" class="form-input" placeholder="Ej. Logística Global S.L." required>
+        </div>
+        <div class="form-group">
+          <label for="regDepartment">Departamento / Área</label>
+          <select id="regDepartment" class="form-select">
+            <option value="Dirección General & IT">Dirección General & IT</option>
+            <option value="Ventas & Operaciones" selected>Ventas & Operaciones</option>
+            <option value="Finanzas & Control">Finanzas & Control</option>
+            <option value="Cadena de Suministro">Cadena de Suministro</option>
+            <option value="Sostenibilidad & ESG">Sostenibilidad & ESG</option>
+            <option value="Talento & RRHH">Talento & RRHH</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Selector de Roles -->
+      <div class="form-group">
+        <label>Rol en la Organización *</label>
+        <input type="hidden" id="regRole" value="user">
+        
+        <div class="role-grid">
+          <div class="role-option selected" id="roleOptionUser" onclick="selectRole('user')">
+            <div class="role-title">
+              <span>👤 Usuario / Área</span>
+            </div>
+            <div class="role-desc">Acceso a KPIs operativos, subida de Excel, Power BI y análisis de su departamento.</div>
+          </div>
+
+          <div class="role-option" id="roleOptionAdmin" onclick="selectRole('admin')">
+            <div class="role-title">
+              <span>🛡️ Administrador</span>
+            </div>
+            <div class="role-desc">Control total de usuarios, roles, módulos, logs de auditoría y análisis ejecutivo.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="regPassword">Contraseña de Seguridad * <span id="passStrength" style="font-size:10px; color:var(--text-faint);">Mínimo 6 caracteres</span></label>
+        <input type="password" id="regPassword" class="form-input" placeholder="••••••••••••" minlength="6" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="btnSubmitRegister" style="margin-top:10px;">
+        <span>Crear Cuenta y Entrar al Panel</span>
+        <span>→</span>
+      </button>
+    </form>
+
+    <!-- Cuentas Demo de Acceso Rápido con 1 Clic -->
+    <div class="quick-auth-box">
+      <div class="quick-auth-title">O entra al instante con cuentas demo preparadas:</div>
+      <div class="quick-auth-buttons">
+        <button type="button" class="btn-demo" onclick="quickLogin('admin@centrodemando.ia', 'admin123')">
+          <span class="role-name">🛡️ Rol Admin</span>
+          <span class="user-sub">admin@centrodemando.ia</span>
+        </button>
+        <button type="button" class="btn-demo" onclick="quickLogin('demo@empresa.com', 'user123')">
+          <span class="role-name">👤 Rol Usuario</span>
+          <span class="user-sub">demo@empresa.com</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:20px; font-size:13px; color:var(--text-dim);">
+      ¿Ya dispones de una cuenta? <a href="login.html" style="color:var(--green); font-weight:600;">Inicia sesión aquí →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="container foot-btm">
+    <div class="copy">Centro de Mando IA · Sistema de Usuarios y Roles · Servidores en la UE (RGPD)</div>
+    <div class="foot-links">
+      <a href="panel.html">Panel de Control</a>
+      <a href="precios.html">Precios</a>
+      <a href="contacto.html">Contacto</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function selectRole(role) {
+  document.getElementById('regRole').value = role;
+  document.getElementById('roleOptionUser').classList.toggle('selected', role === 'user');
+  document.getElementById('roleOptionAdmin').classList.toggle('selected', role === 'admin');
+}
+
+// Password strength indicator
+document.getElementById('regPassword').addEventListener('input', function(e) {
+  const len = e.target.value.length;
+  const badge = document.getElementById('passStrength');
+  if (len === 0) {
+    badge.textContent = 'Mínimo 6 caracteres';
+    badge.style.color = 'var(--text-faint)';
+  } else if (len < 6) {
+    badge.textContent = 'Débil (< 6)';
+    badge.style.color = 'var(--red)';
+  } else if (len < 10) {
+    badge.textContent = 'Aceptable';
+    badge.style.color = 'var(--amber)';
+  } else {
+    badge.textContent = 'Segura ✓';
+    badge.style.color = 'var(--green)';
+  }
+});
+
+// Register submit
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const alertBox = document.getElementById('authAlert');
+  const btn = document.getElementById('btnSubmitRegister');
+  alertBox.className = 'form-feedback';
+  alertBox.style.display = 'none';
+
+  const payload = {
+    name: document.getElementById('regName').value,
+    email: document.getElementById('regEmail').value,
+    company: document.getElementById('regCompany').value,
+    department: document.getElementById('regDepartment').value,
+    role: document.getElementById('regRole').value,
+    password: document.getElementById('regPassword').value
+  };
+
+  btn.disabled = true;
+  btn.innerHTML = '<span>Creando cuenta segura...</span>';
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alertBox.textContent = data.error || 'Error al procesar el registro.';
+      alertBox.className = 'form-feedback error';
+      btn.disabled = false;
+      btn.innerHTML = '<span>Crear Cuenta y Entrar al Panel</span> <span>→</span>';
+      return;
+    }
+
+    // Save session
+    localStorage.setItem('cma_token', data.token);
+    localStorage.setItem('cma_user', JSON.stringify(data.user));
+
+    alertBox.textContent = '¡Cuenta creada con éxito! Redirigiendo a tu Centro de Mando...';
+    alertBox.className = 'form-feedback success';
+
+    setTimeout(() => {
+      window.location.href = 'panel.html';
+    }, 800);
+
+  } catch (err) {
+    console.error('Registration error:', err);
+    alertBox.textContent = 'Error de conexión con el servidor. Inténtalo de nuevo.';
+    alertBox.className = 'form-feedback error';
+    btn.disabled = false;
+    btn.innerHTML = '<span>Crear Cuenta y Entrar al Panel</span> <span>→</span>';
+  }
+});
+
+// Quick demo login
+async function quickLogin(email, password) {
+  const alertBox = document.getElementById('authAlert');
+  alertBox.className = 'form-feedback';
+  alertBox.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (res.ok && data.token) {
+      localStorage.setItem('cma_token', data.token);
+      localStorage.setItem('cma_user', JSON.stringify(data.user));
+      alertBox.textContent = `Acceso concedido como [${data.user.role.toUpperCase()}]. Entrando...`;
+      alertBox.className = 'form-feedback success';
+      setTimeout(() => { window.location.href = 'panel.html'; }, 600);
+    } else {
+      alertBox.textContent = data.error || 'Error al iniciar sesión.';
+      alertBox.className = 'form-feedback error';
+    }
+  } catch (e) {
+    alertBox.textContent = 'Error al conectar con el servidor.';
+    alertBox.className = 'form-feedback error';
+  }
+}
+</script>
+
+</body>
+</html>

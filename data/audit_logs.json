@@ -1,0 +1,114 @@
+[
+  {
+    "id": "log_1786096405260",
+    "timestamp": "2026-08-07T09:53:25.260Z",
+    "user": "demo@empresa.com",
+    "action": "RENOVACION_SUSCRIPCION",
+    "detail": "Renovación mensual automática: €156.09 por Plan Business / Pro Mensual. Vence el 6/9/2026"
+  },
+  {
+    "id": "log_1786096405246",
+    "timestamp": "2026-08-07T09:53:25.246Z",
+    "user": "demo@empresa.com",
+    "action": "SIMULACION_EXPIRACION",
+    "detail": "El usuario simuló la expiración de su suscripción mensual para probar el flujo de renovación."
+  },
+  {
+    "id": "log_1786096405230",
+    "timestamp": "2026-08-07T09:53:25.230Z",
+    "user": "demo@empresa.com",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [USER]"
+  },
+  {
+    "id": "log_1786096401250",
+    "timestamp": "2026-08-07T09:53:21.250Z",
+    "user": "admin@centrodemando.ia",
+    "action": "RENOVACION_SUSCRIPCION",
+    "detail": "Renovación mensual automática: €361.79 por Plan Enterprise Mensual. Vence el 1/10/2026"
+  },
+  {
+    "id": "log_1786096401206",
+    "timestamp": "2026-08-07T09:53:21.206Z",
+    "user": "admin@centrodemando.ia",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [ADMIN]"
+  },
+  {
+    "id": "log_1786096374752",
+    "timestamp": "2026-08-07T09:52:54.752Z",
+    "user": "admin@centrodemando.ia",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [ADMIN]"
+  },
+  {
+    "id": "log_1786095645816",
+    "timestamp": "2026-08-07T09:40:45.816Z",
+    "user": "admin@centrodemando.ia",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [ADMIN]"
+  },
+  {
+    "id": "log_1786095370982",
+    "timestamp": "2026-08-07T09:36:10.982Z",
+    "user": "admin@centrodemando.ia",
+    "action": "ACTIVAR_MODULO",
+    "detail": "Módulo [Ventas & Facturación] activado"
+  },
+  {
+    "id": "log_1786095368928",
+    "timestamp": "2026-08-07T09:36:08.928Z",
+    "user": "admin@centrodemando.ia",
+    "action": "DESACTIVAR_MODULO",
+    "detail": "Módulo [Ventas & Facturación] desactivado"
+  },
+  {
+    "id": "log_1786095290340",
+    "timestamp": "2026-08-07T09:34:50.340Z",
+    "user": "admin@centrodemando.ia",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [ADMIN]"
+  },
+  {
+    "id": "log_1786095219895",
+    "timestamp": "2026-08-07T09:33:39.895Z",
+    "user": "demo@empresa.com",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [USER]"
+  },
+  {
+    "id": "log_1786095147507",
+    "timestamp": "2026-08-07T09:32:27.507Z",
+    "user": "demo@empresa.com",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [USER]"
+  },
+  {
+    "id": "log_1786094316861",
+    "timestamp": "2026-08-07T09:18:36.861Z",
+    "user": "admin@centrodemando.ia",
+    "action": "INICIO_SESION",
+    "detail": "Acceso exitoso con rol [ADMIN]"
+  },
+  {
+    "id": "log_01",
+    "timestamp": "2026-08-07T07:18:36.861Z",
+    "user": "admin@centrodemando.ia",
+    "action": "INICIO_SESION",
+    "detail": "Acceso correcto al panel de administración"
+  },
+  {
+    "id": "log_02",
+    "timestamp": "2026-08-07T04:18:36.861Z",
+    "user": "demo@empresa.com",
+    "action": "CARGA_EXCEL",
+    "detail": "Actualización de KPIs de ventas y operaciones desde Excel"
+  },
+  {
+    "id": "log_03",
+    "timestamp": "2026-08-06T21:18:36.861Z",
+    "user": "admin@centrodemando.ia",
+    "action": "ACTIVAR_MODULO",
+    "detail": "Módulo de Sostenibilidad (ESG) activado para la organización"
+  }
+]

@@ -1,0 +1,169 @@
+[
+  {
+    "id": "usr_admin_01",
+    "name": "Gonzalo Rosendo (Admin)",
+    "email": "admin@centrodemando.ia",
+    "role": "admin",
+    "company": "Centro de Mando Corporativo",
+    "department": "Dirección General & IT",
+    "status": "activo",
+    "phone": "+34 910 882 100",
+    "passwordHash": "35593a59b94896e0ac7358892aa65378749956a48db114af58ea03b562b60fd9f87c53d02b21d7023d9e8cfe3235722bb53b57a65b06f643a1f9499b55c2607b",
+    "salt": "8e4c33c5e0a9d0e7881a4b7a24a94a6b",
+    "createdAt": "2026-07-08T09:18:36.853Z",
+    "lastLogin": "2026-08-07T09:53:21.205Z",
+    "subscription": {
+      "plan": "enterprise",
+      "planName": "Plan Enterprise Mensual",
+      "status": "active",
+      "billingCycle": "mensual",
+      "price": 299,
+      "currency": "EUR",
+      "startDate": "2026-08-02T09:53:21.197Z",
+      "currentPeriodEnd": "2026-10-01T09:53:21.197Z",
+      "autoRenew": true,
+      "paymentMethod": {
+        "brand": "visa",
+        "last4": "4242",
+        "expMonth": "12",
+        "expYear": "2028",
+        "holderName": "Gonzalo Rosendo (Admin)"
+      },
+      "invoices": [
+        {
+          "id": "FAC-2026-0211",
+          "date": "2026-08-07T09:53:21.249Z",
+          "plan": "Plan Enterprise Mensual",
+          "billingCycle": "mensual",
+          "subtotal": 299,
+          "vatRate": 21,
+          "vatAmount": 62.79,
+          "total": 361.79,
+          "currency": "EUR",
+          "status": "pagada",
+          "paymentMethod": "VISA •••• 4242"
+        },
+        {
+          "id": "FAC-2026-0032",
+          "date": "2026-08-02T09:53:21.197Z",
+          "plan": "Plan Enterprise Mensual",
+          "billingCycle": "mensual",
+          "subtotal": 299,
+          "vatRate": 21,
+          "vatAmount": 62.79,
+          "total": 361.79,
+          "currency": "EUR",
+          "status": "pagada",
+          "paymentMethod": "Tarjeta Corporativa Visa"
+        }
+      ]
+    }
+  },
+  {
+    "id": "usr_demo_02",
+    "name": "Laura Morales",
+    "email": "demo@empresa.com",
+    "role": "user",
+    "company": "Distribuciones Ibéricas S.L.",
+    "department": "Ventas & Operaciones",
+    "status": "activo",
+    "phone": "+34 934 112 334",
+    "passwordHash": "c39b2d692e1e6e36110c05c57c8c38bc0bca80f5eb97ed8130353def29441bf1b4a0831868344785f966ec40456c9079c0e590dbbcaa0b30aa4cfb130af8ab82",
+    "salt": "d8d1594b4dc92b56b32d4dfc766e2c8c",
+    "createdAt": "2026-07-24T09:18:36.853Z",
+    "lastLogin": "2026-08-07T09:53:25.230Z",
+    "subscription": {
+      "plan": "pro",
+      "planName": "Plan Business / Pro Mensual",
+      "status": "active",
+      "billingCycle": "mensual",
+      "price": 129,
+      "currency": "EUR",
+      "startDate": "2026-08-02T09:53:21.198Z",
+      "currentPeriodEnd": "2026-09-06T09:53:25.260Z",
+      "autoRenew": true,
+      "paymentMethod": {
+        "brand": "visa",
+        "last4": "4242",
+        "expMonth": "12",
+        "expYear": "2028",
+        "holderName": "Laura Morales"
+      },
+      "invoices": [
+        {
+          "id": "FAC-2026-0125",
+          "date": "2026-08-07T09:53:25.260Z",
+          "plan": "Plan Business / Pro Mensual",
+          "billingCycle": "mensual",
+          "subtotal": 129,
+          "vatRate": 21,
+          "vatAmount": 27.09,
+          "total": 156.09,
+          "currency": "EUR",
+          "status": "pagada",
+          "paymentMethod": "VISA •••• 4242"
+        },
+        {
+          "id": "FAC-2026-0050",
+          "date": "2026-08-02T09:53:21.198Z",
+          "plan": "Plan Business / Pro Mensual",
+          "billingCycle": "mensual",
+          "subtotal": 129,
+          "vatRate": 21,
+          "vatAmount": 27.09,
+          "total": 156.09,
+          "currency": "EUR",
+          "status": "pagada",
+          "paymentMethod": "Tarjeta Corporativa Visa"
+        }
+      ]
+    }
+  },
+  {
+    "id": "usr_demo_03",
+    "name": "Carlos Vega",
+    "email": "carlos@empresa.com",
+    "role": "user",
+    "company": "Distribuciones Ibéricas S.L.",
+    "department": "Finanzas & Sostenibilidad",
+    "status": "activo",
+    "phone": "+34 963 445 667",
+    "passwordHash": "efc8b6acb2b66fa50ae964c3484034e105c3b852f37b5103884abf764d9a79d7c5f5c4c728890cedf46de2c14c973c9e60a4740a2e50d757d8a545dcdb0cab32",
+    "salt": "fa339424e5cd3534e6d86531392d87ab",
+    "createdAt": "2026-07-31T09:18:36.853Z",
+    "lastLogin": "2026-08-06T09:18:36.853Z",
+    "subscription": {
+      "plan": "pro",
+      "planName": "Plan Business / Pro Mensual",
+      "status": "active",
+      "billingCycle": "mensual",
+      "price": 129,
+      "currency": "EUR",
+      "startDate": "2026-08-02T09:53:21.198Z",
+      "currentPeriodEnd": "2026-09-01T09:53:21.198Z",
+      "autoRenew": true,
+      "paymentMethod": {
+        "brand": "visa",
+        "last4": "4242",
+        "expMonth": "12",
+        "expYear": "2028",
+        "holderName": "Carlos Vega"
+      },
+      "invoices": [
+        {
+          "id": "FAC-2026-0097",
+          "date": "2026-08-02T09:53:21.198Z",
+          "plan": "Plan Business / Pro Mensual",
+          "billingCycle": "mensual",
+          "subtotal": 129,
+          "vatRate": 21,
+          "vatAmount": 27.09,
+          "total": 156.09,
+          "currency": "EUR",
+          "status": "pagada",
+          "paymentMethod": "Tarjeta Corporativa Visa"
+        }
+      ]
+    }
+  }
+]

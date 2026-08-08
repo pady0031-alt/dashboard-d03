@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro de Mando Integral — IA</title>
+<style>
+  :root{
+    --bg:#070c10;
+    --panel:#0c151c;
+    --panel-border:rgba(56,214,140,0.18);
+    --panel-border-strong:rgba(56,214,140,0.35);
+    --green:#3ee08a;
+    --green-dim:#1c8f5a;
+    --green-glow:rgba(62,224,138,0.35);
+    --text:#e7f2ec;
+    --text-dim:#8fa39a;
+    --text-faint:#5d6e67;
+    --red:#ef6a6a;
+    --amber:#e8c15a;
+    --blue:#5aa7e8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI',Roboto,Arial,sans-serif;
+    background:radial-gradient(circle at 20% 0%, #0d1b18 0%, var(--bg) 55%);
+    color:var(--text);
+    padding:18px;
+    min-height:100vh;
+  }
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  .shell{
+    position:relative;
+    display:grid;
+    grid-template-columns:200px 1fr 230px;
+    gap:12px;
+    max-width:1600px;
+    margin:0 auto;
+  }
+  .panel{
+    background:linear-gradient(180deg, rgba(18,32,28,0.9), rgba(9,16,14,0.9));
+    border:1px solid var(--panel-border);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .panel-title{
+    display:flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;letter-spacing:.4px;
+    color:var(--text);text-transform:uppercase;
+    margin-bottom:12px;
+  }
+  .panel-title .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green-glow);}
+  .eyebrow{font-size:10px;color:var(--text-dim);letter-spacing:.5px;text-transform:uppercase;}
+  .metric-val{font-size:20px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;}
+  .metric-delta{font-size:11px;font-weight:600;}
+  .up{color:var(--green);}
+  .down{color:var(--red);}
+
+  /* LOGO / NAV */
+  .logo-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+  .logo-mark{
+    width:34px;height:34px;border-radius:50%;
+    border:1.5px solid var(--green);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;color:var(--green);
+    box-shadow:0 0 10px var(--green-glow) inset;
+  }
+  .brand-name{font-size:13px;font-weight:700;}
+  .brand-sub{font-size:9px;color:var(--text-dim);letter-spacing:1px;}
+  nav.navlist{margin-top:14px;display:flex;flex-direction:column;gap:2px;}
+  .navitem{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 6px;border-radius:6px;font-size:12px;color:var(--text-dim);
+    cursor:pointer;
+  }
+  .navitem.active{background:rgba(62,224,138,0.08);color:var(--text);border:1px solid var(--panel-border);}
+  .navitem:hover{color:var(--text);}
+  .toggle{width:26px;height:14px;border-radius:8px;background:rgba(255,255,255,0.06);position:relative;flex-shrink:0;}
+  .toggle.on{background:rgba(62,224,138,0.25);}
+  .toggle::after{content:'';position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--text-faint);}
+  .toggle.on::after{left:14px;background:var(--green);box-shadow:0 0 4px var(--green-glow);}
+  .toggle.off::after{background:var(--text-faint);}
+  .mini-weather{margin-top:16px;padding-top:14px;border-top:1px solid var(--panel-border);}
+  .city{font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+  .temp{font-size:22px;font-weight:700;}
+  .sync{margin-top:14px;padding-top:14px;border-top:1px solid var(--panel-border);font-size:10px;color:var(--text-dim);}
+  .sync .live{color:var(--green);font-weight:600;}
+
+  /* HEADER */
+  .header{
+    display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(180deg, rgba(18,32,28,0.9), rgba(9,16,14,0.9));
+    border:1px solid var(--panel-border);border-radius:10px;
+    padding:14px 20px;margin-bottom:12px;flex-wrap:wrap;gap:10px;
+  }
+  .header h1{font-size:17px;font-weight:700;letter-spacing:.3px;}
+  .status-pill{
+    display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-dim);
+    background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);
+    padding:5px 10px;border-radius:20px;
+  }
+  .clock{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .datebadge{font-size:11px;color:var(--text-dim);border:1px solid var(--panel-border);padding:5px 10px;border-radius:6px;}
+
+  /* KPI ROW */
+  .kpi-row{
+    display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:12px;
+  }
+  .kpi-card{
+    background:linear-gradient(180deg, rgba(18,32,28,0.9), rgba(9,16,14,0.9));
+    border:1px solid var(--panel-border);border-radius:10px;padding:12px 14px;
+  }
+
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+  .grid2{display:grid;grid-template-columns:2fr 1.6fr;gap:12px;margin-bottom:12px;}
+
+  .stat-triplet{display:flex;justify-content:space-between;gap:8px;margin-bottom:10px;}
+  .stat-triplet > div{flex:1;}
+
+  .barlegend{display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--text-dim);}
+  .barlegend .row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .swatch{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:6px;}
+
+  .region-bars{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+  .region-bars .row{display:grid;grid-template-columns:70px 1fr 30px;align-items:center;gap:8px;font-size:11px;color:var(--text-dim);}
+  .track{height:6px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden;}
+  .fill{height:100%;background:linear-gradient(90deg,var(--green-dim),var(--green));}
+
+  .chart-wrap{position:relative;width:100%;height:150px;margin-top:6px;}
+  .chart-wrap.sm{height:120px;}
+  .chart-wrap.donut{height:130px;}
+
+  .staff-photo{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:var(--text-faint);font-size:11px;text-align:center;height:100%;gap:8px;
+  }
+  .avatar-ring{
+    width:78px;height:78px;border-radius:50%;
+    border:2px solid var(--green);
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;font-weight:700;color:var(--green);
+    box-shadow:0 0 14px var(--green-glow);
+  }
+
+  .news-item{padding:8px 0;border-bottom:1px solid var(--panel-border);font-size:11px;}
+  .news-item:last-child{border-bottom:none;}
+  .news-date{color:var(--text-faint);font-size:10px;margin-top:2px;}
+
+  /* AI ASSISTANT SIDEBAR */
+  .ai-orb-wrap{display:flex;flex-direction:column;align-items:center;padding:6px 0 16px;}
+  .ai-orb{
+    width:96px;height:96px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, rgba(62,224,138,0.5), rgba(9,16,14,0.9) 70%);
+    border:1px solid var(--green-dim);
+    box-shadow:0 0 24px var(--green-glow);
+    position:relative;
+  }
+  .ai-hello{font-size:12px;color:var(--text-dim);margin-top:10px;text-align:center;line-height:1.5;}
+  .ai-hello b{color:var(--text);}
+  .ai-section{margin-top:16px;}
+  .ai-section h3{font-size:11px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;}
+  .ai-section.opp h3{color:var(--green);}
+  .ai-section.warn h3{color:var(--amber);}
+  .ai-section.risk h3{color:var(--red);}
+  .ai-item{display:flex;gap:6px;font-size:11px;color:var(--text-dim);margin-bottom:8px;line-height:1.5;}
+  .ai-item .bullet{flex-shrink:0;margin-top:5px;width:5px;height:5px;border-radius:50%;}
+  .mic{
+    width:70px;height:70px;border-radius:50%;
+    border:1.5px solid var(--green);
+    display:flex;align-items:center;justify-content:center;
+    margin:20px auto 8px;color:var(--green);font-size:22px;
+    box-shadow:0 0 14px var(--green-glow);
+  }
+  .mic-label{text-align:center;font-size:11px;color:var(--text-dim);}
+
+  @media (max-width:1100px){
+    .shell{grid-template-columns:1fr;}
+    .kpi-row{grid-template-columns:repeat(4,1fr);}
+    .grid3{grid-template-columns:1fr;}
+    .grid2{grid-template-columns:1fr;}
+  }
+
+  /* MODULE VISIBILITY */
+  [data-module].module-hidden{display:none;}
+
+  /* CONFIG BUTTON */
+  .cfg-btn{
+    display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-dim);
+    background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);
+    padding:5px 12px;border-radius:20px;cursor:pointer;
+  }
+  .cfg-btn:hover{color:var(--text);border-color:var(--panel-border-strong);}
+  .cfg-btn .gear{color:var(--green);}
+
+  /* CONFIG MODAL */
+  .cfg-overlay{
+    position:absolute;inset:0;background:rgba(3,6,8,0.7);
+    display:none;align-items:flex-start;justify-content:center;
+    padding:60px 20px;z-index:50;
+  }
+  .cfg-overlay.open{display:flex;}
+  .cfg-modal{
+    width:100%;max-width:680px;
+    background:linear-gradient(180deg, rgba(18,32,28,0.98), rgba(9,16,14,0.98));
+    border:1px solid var(--panel-border-strong);border-radius:12px;
+    padding:20px 22px;max-height:80vh;overflow:auto;
+  }
+  .cfg-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+  .cfg-head h2{font-size:15px;font-weight:700;}
+  .cfg-close{cursor:pointer;color:var(--text-dim);font-size:16px;line-height:1;padding:4px;}
+  .cfg-close:hover{color:var(--text);}
+  .cfg-sub{font-size:11px;color:var(--text-dim);margin-bottom:16px;}
+  .cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .cfg-card{
+    border:1px solid var(--panel-border);border-radius:8px;padding:10px 12px;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .cfg-card.disabled{opacity:0.5;}
+  .cfg-card-name{font-size:12px;font-weight:600;}
+  .cfg-card-desc{font-size:10px;color:var(--text-dim);margin-top:2px;}
+  .cfg-toggle-btn{cursor:pointer;}
+  @media (max-width:600px){.cfg-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<h2 class="sr-only">Panel de control estilo centro de mando, con tema oscuro y acentos verdes, mostrando KPIs de ventas, clientes, operaciones, cadena de suministro, talento, sostenibilidad y un asistente de IA con recomendaciones.</h2>
+
+<div class="shell">
+
+  <!-- LEFT NAV -->
+  <aside class="panel">
+    <div class="logo-row">
+      <div class="logo-mark">GR</div>
+      <div>
+        <div class="brand-name">Gonzalo Rosendo</div>
+        <div class="brand-sub">DATA &amp; FORMATION</div>
+      </div>
+    </div>
+    <nav class="navlist" id="navlist"></nav>
+    <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--panel-border);">
+      <a href="index.html" style="font-size:11px; color:var(--green); text-decoration:none; display:flex; align-items:center; gap:6px;">← Volver a Web Pública</a>
+    </div>
+    <div class="mini-weather">
+      <div class="city">Sevilla, España</div>
+      <div class="temp" id="temp">—</div>
+      <div class="eyebrow" id="weatherDesc">Cargando...</div>
+    </div>
+    <div class="sync">
+      <div class="live">● Sincronizado</div>
+      <div style="margin-top:4px;">Última actualización:<br><span id="lastSync"></span></div>
+    </div>
+  </aside>
+
+  <!-- CENTER -->
+  <main>
+    <div class="header">
+      <h1>CENTRO DE MANDO INTEGRAL</h1>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div class="status-pill"><span style="color:var(--green);">●</span> Datos 100% actualizados</div>
+        <div class="clock" id="clock">--:--</div>
+        <div class="status-pill"><span style="color:var(--green);">●</span> En tiempo real</div>
+        <div class="datebadge" id="today"></div>
+        <div class="cfg-btn" id="importBtn"><span class="gear">📊</span> Importar Excel</div>
+        <input type="file" id="excelInput" accept=".xlsx,.xls,.csv" style="display:none;">
+        <div class="cfg-btn" id="cfgOpenBtn"><span class="gear">⚙</span> Configuración</div>
+      </div>
+    </div>
+    <div id="importToast" style="display:none;font-size:11px;color:var(--green);margin:-4px 0 10px;"></div>
+
+    <div class="kpi-row" id="kpiRow" data-module="resumen"></div>
+
+    <div class="grid2">
+      <section class="panel" data-module="clientes">
+        <div class="panel-title"><span class="dot"></span>Clientes</div>
+        <div class="stat-triplet">
+          <div><div class="eyebrow">Clientes activos</div><div class="metric-val">2.409</div><div class="metric-delta up">▲ 13.1%</div></div>
+          <div><div class="eyebrow">Retención</div><div class="metric-val">89%</div><div class="metric-delta up">▲ 5.2%</div></div>
+          <div><div class="eyebrow">Satisfacción</div><div class="metric-val">4.8/5</div><div class="metric-delta up">▲ 9.1%</div></div>
+        </div>
+        <div class="eyebrow" style="margin-bottom:4px;">Evolución clientes activos</div>
+        <div class="chart-wrap sm"><canvas id="clientesChart" role="img" aria-label="Evolución de clientes activos de enero a diciembre, crecimiento sostenido de 0,4M a 2,4M">Clientes activos creciendo cada mes hasta 2.409.</canvas></div>
+        <div class="eyebrow" style="margin:10px 0 6px;">Distribución por región</div>
+        <div class="barlegend">
+          <div class="row"><span><span class="swatch" style="background:var(--green);"></span>Europa</span><span>45%</span></div>
+          <div class="row"><span><span class="swatch" style="background:var(--blue);"></span>América</span><span>25%</span></div>
+          <div class="row"><span><span class="swatch" style="background:var(--amber);"></span>Asia</span><span>20%</span></div>
+          <div class="row"><span><span class="swatch" style="background:var(--red);"></span>África</span><span>6%</span></div>
+        </div>
+      </section>
+
+      <section class="panel" data-module="operaciones">
+        <div class="panel-title"><span class="dot"></span>Operaciones</div>
+        <div class="stat-triplet">
+          <div><div class="eyebrow">Nivel de servicio</div><div class="metric-val">96%</div><div class="metric-delta up">▲ 4.3%</div></div>
+          <div><div class="eyebrow">Pedidos entregados</div><div class="metric-val">18.245</div><div class="metric-delta up">▲ 12.5%</div></div>
+          <div><div class="eyebrow">Eficiencia</div><div class="metric-val">92%</div><div class="metric-delta up">▲ 6.7%</div></div>
+        </div>
+        <div class="eyebrow" style="margin-bottom:6px;">Retrasos por región</div>
+        <div class="region-bars">
+          <div class="row"><span>Norte</span><div class="track"><div class="fill" style="width:18%;"></div></div><span>1.8%</span></div>
+          <div class="row"><span>Centro</span><div class="track"><div class="fill" style="width:23%;"></div></div><span>2.3%</span></div>
+          <div class="row"><span>Este</span><div class="track"><div class="fill" style="width:26%;"></div></div><span>2.6%</span></div>
+          <div class="row"><span>Sur</span><div class="track"><div class="fill" style="width:21%;"></div></div><span>2.1%</span></div>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+          <div class="eyebrow">Tiempo medio entrega</div>
+          <div><span class="metric-val" style="font-size:17px;">23 min</span> <span class="metric-delta down">▼ 3.2%</span></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid3">
+      <section class="panel" data-module="suministro">
+        <div class="panel-title"><span class="dot"></span>Cadena de suministro</div>
+        <div class="stat-triplet">
+          <div><div class="eyebrow">Nivel de servicio</div><div class="metric-val" style="font-size:16px;">96%</div><div class="metric-delta up">▲ 4.3%</div></div>
+          <div><div class="eyebrow">Riesgo</div><div class="metric-val" style="font-size:16px;color:var(--green);">Bajo</div></div>
+        </div>
+        <div class="eyebrow" style="margin:8px 0 6px;">Retrasos por región</div>
+        <div class="chart-wrap donut"><canvas id="suministroChart" role="img" aria-label="Retrasos por región: Europa 2,1%, América 3,4%, Asia 5,7%, África 4,1%, Oceanía 1,3%">Retrasos por región en la cadena de suministro.</canvas></div>
+      </section>
+
+      <section class="panel" data-module="proyectos">
+        <div class="panel-title"><span class="dot"></span>Proyectos estratégicos</div>
+        <div class="stat-triplet">
+          <div><div class="eyebrow">Activos</div><div class="metric-val" style="font-size:16px;">28</div></div>
+          <div><div class="eyebrow">En plazo</div><div class="metric-val" style="font-size:16px;">71%</div></div>
+          <div><div class="eyebrow">Completados</div><div class="metric-val" style="font-size:16px;">11</div></div>
+        </div>
+        <div class="chart-wrap donut"><canvas id="proyectosChart" role="img" aria-label="Distribución de proyectos por estado: en plazo 71%, en riesgo 18%, retrasado 11%">Distribución de proyectos por estado.</canvas></div>
+      </section>
+
+      <section class="panel" data-module="talento">
+        <div class="panel-title"><span class="dot"></span>Talento y cultura</div>
+        <div class="staff-photo">
+          <div class="avatar-ring">GR</div>
+          <div>756 empleados · satisfacción 4.6/5</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid3">
+      <section class="panel" data-module="sostenibilidad">
+        <div class="panel-title"><span class="dot"></span>Sostenibilidad</div>
+        <div class="stat-triplet">
+          <div><div class="eyebrow">Emisiones CO₂</div><div class="metric-val" style="font-size:16px;color:var(--green);">-18%</div></div>
+          <div><div class="eyebrow">Consumo energía</div><div class="metric-val" style="font-size:16px;color:var(--green);">-12%</div></div>
+          <div><div class="eyebrow">Residuos reciclados</div><div class="metric-val" style="font-size:16px;">78%</div></div>
+        </div>
+        <div class="chart-wrap sm"><canvas id="sostenibilidadChart" role="img" aria-label="Evolución de emisiones de CO2 de enero a diciembre, tendencia descendente">Evolución de emisiones de CO2, tendencia a la baja.</canvas></div>
+      </section>
+
+      <section class="panel" data-module="ventas-geo">
+        <div class="panel-title"><span class="dot"></span>Análisis geográfico de ventas</div>
+        <div class="eyebrow" style="margin-bottom:8px;">Ventas por país (top 5)</div>
+        <div class="region-bars">
+          <div class="row"><span>España</span><div class="track"><div class="fill" style="width:100%;"></div></div><span>632k</span></div>
+          <div class="row"><span>Francia</span><div class="track"><div class="fill" style="width:82%;"></div></div><span>518k</span></div>
+          <div class="row"><span>Italia</span><div class="track"><div class="fill" style="width:65%;"></div></div><span>412k</span></div>
+          <div class="row"><span>Portugal</span><div class="track"><div class="fill" style="width:51%;"></div></div><span>326k</span></div>
+          <div class="row"><span>Alemania</span><div class="track"><div class="fill" style="width:45%;"></div></div><span>284k</span></div>
+        </div>
+      </section>
+
+      <section class="panel" data-module="noticias">
+        <div class="panel-title"><span class="dot"></span>Noticias y alertas</div>
+        <div class="news-item">Nueva campaña de verano: 15% venta con barbacoa <div class="news-date">06/05/2025</div></div>
+        <div class="news-item">Apertura nueva tienda en Sevilla Nervión <div class="news-date">15/05/2025</div></div>
+        <div class="news-item">Lanzamiento nuevo menú gourmet <div class="news-date">20/05/2025</div></div>
+      </section>
+
+      <section class="panel" data-module="powerbi" style="grid-column:1/-1;">
+        <div class="panel-title"><span class="dot"></span>Informe Power BI</div>
+        <div id="pbiEmpty">
+          <div class="eyebrow" style="margin-bottom:8px;">Pega el enlace de "Publicar en la web" o de inserción de tu informe de Power BI</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input id="pbiUrl" type="text" placeholder="https://app.powerbi.com/view?r=..." style="flex:1;min-width:220px;background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:6px;padding:8px 10px;color:var(--text);font-size:12px;">
+            <div class="cfg-btn" id="pbiInsertBtn" style="cursor:pointer;">Insertar informe</div>
+          </div>
+          <div class="eyebrow" style="margin-top:10px;font-size:9px;">Nota: los enlaces "Publicar en la web" son públicos — no los uses con datos sensibles.</div>
+        </div>
+        <iframe id="pbiFrame" style="display:none;width:100%;height:420px;border:0;border-radius:8px;margin-top:8px;"></iframe>
+      </section>
+    </div>
+  </main>
+
+  <!-- RIGHT AI SIDEBAR -->
+  <aside class="panel" data-module="asistente-ia">
+    <div class="ai-orb-wrap">
+      <div class="ai-orb" id="aiOrb" style="cursor:pointer;" title="Haz clic para actualizar análisis ejecutivo IA"></div>
+      <div class="ai-hello" id="aiHello"><b>Hola,</b><br>aquí tienes el análisis de hoy</div>
+    </div>
+
+    <div style="margin-bottom:12px; padding:10px; background:rgba(62,224,138,0.04); border:1px solid var(--panel-border); border-radius:8px;">
+      <div class="eyebrow" style="margin-bottom:6px; color:var(--green);">Consultar Asistente IA</div>
+      <div style="display:flex; gap:6px; margin-bottom:6px;">
+        <input type="text" id="aiChatInput" placeholder="Ej: ¿Cómo optimizar costes?" style="flex:1; background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:6px; padding:6px 8px; color:var(--text); font-size:11px;">
+        <button type="button" id="aiSendBtn" style="background:var(--green-dim); border:none; border-radius:6px; color:var(--text); padding:6px 10px; cursor:pointer; font-size:11px; font-weight:600;">Preguntar</button>
+      </div>
+      <div id="aiChatResponse" style="font-size:11px; color:var(--text); max-height:180px; overflow-y:auto; line-height:1.4; display:none; background:rgba(0,0,0,0.4); padding:8px; border-radius:6px; border:1px solid var(--panel-border); white-space:pre-line;"></div>
+    </div>
+
+    <div class="ai-section opp">
+      <h3>Oportunidades</h3>
+      <div class="ai-item"><span class="bullet" style="background:var(--green);"></span>Las ventas han aumentado un 15.3% vs el mes anterior.</div>
+      <div class="ai-item"><span class="bullet" style="background:var(--green);"></span>Excelente retención de clientes (89%) con mejora del 5.2%.</div>
+      <div class="ai-item"><span class="bullet" style="background:var(--green);"></span>Aumente el ticket medio en tiendas del sur (+8.7%).</div>
+    </div>
+
+    <div class="ai-section warn">
+      <h3>Atenciones</h3>
+      <div class="ai-item"><span class="bullet" style="background:var(--amber);"></span>Retrasos en la región este han aumentado al 2.6%.</div>
+      <div class="ai-item"><span class="bullet" style="background:var(--amber);"></span>La rotación de personal subió al 8.1% (+1.3%).</div>
+    </div>
+
+    <div class="ai-section risk">
+      <h3>Riesgos</h3>
+      <div class="ai-item"><span class="bullet" style="background:var(--red);"></span>Riesgo de suministro en Asia es alto (5.7%).</div>
+      <div class="ai-item"><span class="bullet" style="background:var(--red);"></span>Incremento de retrasos en pedidos (3.2%).</div>
+    </div>
+
+    <div class="mic" id="micBtn" style="cursor:pointer;" title="Pulsa para hablar o dictar consulta"><i>🎙</i></div>
+    <div class="mic-label" id="micLabel">Pulsa para hablar / dictar</div>
+  </aside>
+
+  <!-- CONFIG MODAL -->
+  <div class="cfg-overlay" id="cfgOverlay">
+    <div class="cfg-modal">
+      <div class="cfg-head">
+        <h2>Configurar módulos</h2>
+        <span class="cfg-close" id="cfgCloseBtn">✕</span>
+      </div>
+      <div class="cfg-sub">Activa o desactiva cada módulo para personalizar tu centro de mando.</div>
+      <div class="cfg-grid" id="cfgGrid"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  var modules=[
+    {key:"resumen",label:"Resumen general (KPIs)",desc:"Ventas, beneficio, pedidos y satisfacción",on:true},
+    {key:"clientes",label:"Clientes",desc:"Clientes activos, retención y regiones",on:true},
+    {key:"operaciones",label:"Operaciones",desc:"Nivel de servicio y entregas",on:true},
+    {key:"suministro",label:"Cadena de suministro",desc:"Riesgo y retrasos por región",on:true},
+    {key:"proyectos",label:"Proyectos estratégicos",desc:"Proyectos activos y su estado",on:true},
+    {key:"talento",label:"Talento y cultura",desc:"Plantilla y satisfacción del equipo",on:true},
+    {key:"sostenibilidad",label:"Sostenibilidad",desc:"Emisiones, energía y reciclaje",on:true},
+    {key:"ventas-geo",label:"Análisis geográfico de ventas",desc:"Top países por ventas",on:true},
+    {key:"noticias",label:"Noticias y alertas",desc:"Últimas novedades del negocio",on:true},
+    {key:"powerbi",label:"Informe Power BI",desc:"Inserta un informe publicado de Power BI",on:true},
+    {key:"asistente-ia",label:"Asistente IA",desc:"Oportunidades, atenciones y riesgos",on:true}
+  ];
+
+  function applyModuleState(key,on){
+    document.querySelectorAll('[data-module="'+key+'"]').forEach(function(el){
+      el.classList.toggle("module-hidden",!on);
+    });
+  }
+
+  function renderNav(){
+    var html="";
+    modules.forEach(function(m){
+      html+='<div class="navitem" data-nav-key="'+m.key+'">'+m.label.split(" (")[0]+
+        '<span class="toggle '+(m.on?"on":"off")+'" data-toggle-key="'+m.key+'"></span></div>';
+    });
+    document.getElementById("navlist").innerHTML=html;
+    document.querySelectorAll("[data-toggle-key]").forEach(function(t){
+      t.addEventListener("click",function(e){
+        e.stopPropagation();
+        toggleModule(t.getAttribute("data-toggle-key"));
+      });
+    });
+  }
+
+  function renderCfgGrid(){
+    var html="";
+    modules.forEach(function(m){
+      html+='<div class="cfg-card'+(m.on?"":" disabled")+'" data-cfg-key="'+m.key+'">'+
+        '<div><div class="cfg-card-name">'+m.label+'</div><div class="cfg-card-desc">'+m.desc+'</div></div>'+
+        '<span class="toggle cfg-toggle-btn '+(m.on?"on":"off")+'" data-toggle-key="'+m.key+'"></span></div>';
+    });
+    document.getElementById("cfgGrid").innerHTML=html;
+    document.querySelectorAll("#cfgGrid [data-toggle-key]").forEach(function(t){
+      t.addEventListener("click",function(){toggleModule(t.getAttribute("data-toggle-key"));});
+    });
+  }
+
+  function toggleModule(key){
+    var m=modules.find(function(x){return x.key===key;});
+    if(!m)return;
+    m.on=!m.on;
+    applyModuleState(key,m.on);
+    renderNav();
+    renderCfgGrid();
+  }
+
+  renderNav();
+  renderCfgGrid();
+  modules.forEach(function(m){applyModuleState(m.key,m.on);});
+
+  var cfgOverlay=document.getElementById("cfgOverlay");
+  document.getElementById("cfgOpenBtn").addEventListener("click",function(){cfgOverlay.classList.add("open");});
+  document.getElementById("cfgCloseBtn").addEventListener("click",function(){cfgOverlay.classList.remove("open");});
+  cfgOverlay.addEventListener("click",function(e){if(e.target===cfgOverlay)cfgOverlay.classList.remove("open");});
+
+  function updateClock(){
+    var now=new Date();
+    var hh=String(now.getHours()).padStart(2,"0");
+    var mm=String(now.getMinutes()).padStart(2,"0");
+    document.getElementById("clock").textContent=hh+":"+mm;
+    document.getElementById("lastSync").textContent=hh+":"+mm+":"+String(now.getSeconds()).padStart(2,"0");
+  }
+  updateClock();
+  setInterval(updateClock,1000);
+  document.getElementById("today").textContent=new Date().toLocaleDateString("es-ES",{day:"2-digit",month:"long",year:"numeric"});
+  document.getElementById("temp").textContent="24°C";
+  document.getElementById("weatherDesc").textContent="Despejado";
+
+  var kpis=[
+    ["Ventas totales","€2.847.654","▲ 15.3%",true],
+    ["Beneficio neto","€312.456","▲ 14.2%",true],
+    ["Pedidos totales","18.245","▲ 12.5%",true],
+    ["Ticket medio","€23.45","▲ 8.7%",true],
+    ["Clientes activos","2.409","▲ 13.1%",true],
+    ["Tiendas activas","152","▲ 3.4%",true],
+    ["Satisfacción","4.8/5","▲ 9.1%",true],
+    ["Sistemas operativo","98%",null,null]
+  ];
+  var kpiHtml="";
+  renderKpis();
+
+  var months=["ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC"];
+  var green="#3ee08a", greenDim="rgba(62,224,138,0.12)";
+
+  new Chart(document.getElementById("clientesChart"),{
+    type:"line",
+    data:{labels:months,datasets:[{data:[900,1050,1200,1400,1550,1700,1850,1980,2100,2220,2320,2409],
+      borderColor:green,backgroundColor:greenDim,fill:true,tension:0.35,pointRadius:0,borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#5d6e67",font:{size:9}},grid:{display:false}},
+              y:{ticks:{color:"#5d6e67",font:{size:9}},grid:{color:"rgba(255,255,255,0.04)"}}}}
+  });
+
+  new Chart(document.getElementById("suministroChart"),{
+    type:"doughnut",
+    data:{labels:["Europa","América","Asia","África","Oceanía"],
+      datasets:[{data:[2.1,3.4,5.7,4.1,1.3],
+        backgroundColor:["#3ee08a","#5aa7e8","#e8c15a","#ef6a6a","#8a7fe8"],borderColor:"#0c151c",borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:"65%",
+      plugins:{legend:{position:"bottom",labels:{color:"#8fa39a",font:{size:9},boxWidth:8,padding:8}}}}
+  });
+
+  new Chart(document.getElementById("proyectosChart"),{
+    type:"doughnut",
+    data:{labels:["En plazo","En riesgo","Retrasado"],
+      datasets:[{data:[71,18,11],backgroundColor:["#3ee08a","#e8c15a","#ef6a6a"],borderColor:"#0c151c",borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:"65%",
+      plugins:{legend:{position:"bottom",labels:{color:"#8fa39a",font:{size:9},boxWidth:8,padding:8}}}}
+  });
+
+  new Chart(document.getElementById("sostenibilidadChart"),{
+    type:"line",
+    data:{labels:months,datasets:[{data:[145,140,132,128,120,115,108,102,96,90,85,80],
+      borderColor:green,backgroundColor:greenDim,fill:true,tension:0.35,pointRadius:0,borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:"#5d6e67",font:{size:9}},grid:{display:false}},
+              y:{ticks:{color:"#5d6e67",font:{size:9}},grid:{color:"rgba(255,255,255,0.04)"}}}}
+  });
+
+  /* ---------- IMPORTAR EXCEL ---------- */
+  document.getElementById("importBtn").addEventListener("click",function(){
+    document.getElementById("excelInput").click();
+  });
+
+  document.getElementById("excelInput").addEventListener("change",function(e){
+    var file=e.target.files[0];
+    if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(evt){
+      try{
+        var wb=XLSX.read(evt.target.result,{type:"binary"});
+        var sheetName=wb.SheetNames.find(function(n){return n.toLowerCase().indexOf("kpi")>-1;})||wb.SheetNames[0];
+        var rows=XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
+        var updated=0;
+        rows.forEach(function(row){
+          var name=(row.Metrica||row.metrica||row.Metric||"").toString().trim().toLowerCase();
+          var kpi=kpis.find(function(k){return k[0].toLowerCase()===name;});
+          if(kpi){
+            if(row.Valor!==undefined) kpi[1]=row.Valor.toString();
+            if(row.Variacion!==undefined && kpi[2]!==null) kpi[2]="▲ "+row.Variacion.toString();
+            updated++;
+          }
+        });
+        renderKpis();
+        var toast=document.getElementById("importToast");
+        toast.style.display="block";
+        toast.textContent=updated>0
+          ? "✓ "+updated+" métricas actualizadas desde \""+file.name+"\"."
+          : "No se encontraron filas que coincidan con los nombres de las métricas. Revisa la columna 'Metrica'.";
+        setTimeout(function(){toast.style.display="none";},5000);
+      }catch(err){
+        alert("No se pudo leer el archivo. Asegúrate de que es un .xlsx válido.");
+      }
+      document.getElementById("excelInput").value="";
+    };
+    reader.readAsBinaryString(file);
+  });
+
+  function renderKpis(){
+    var kpiHtml="";
+    kpis.forEach(function(k){
+      kpiHtml+='<div class="kpi-card"><div class="eyebrow">'+k[0]+'</div><div class="metric-val">'+k[1]+'</div>'+
+        (k[2]?'<div class="metric-delta up">'+k[2]+'</div>':'')+'</div>';
+    });
+    document.getElementById("kpiRow").innerHTML=kpiHtml;
+  }
+
+  /* ---------- INSERTAR INFORME POWER BI ---------- */
+  document.getElementById("pbiInsertBtn").addEventListener("click",function(){
+    var url=document.getElementById("pbiUrl").value.trim();
+    if(!url){alert("Pega primero el enlace del informe de Power BI.");return;}
+    document.getElementById("pbiFrame").src=url;
+    document.getElementById("pbiFrame").style.display="block";
+    document.getElementById("pbiEmpty").style.display="none";
+  });
+
+  /* ---------- ASISTENTE IA ACTIVO ---------- */
+  try {
+    var cachedUser = localStorage.getItem('cma_user');
+    if (cachedUser) {
+      var u = JSON.parse(cachedUser);
+      if (u && u.name) {
+        document.getElementById('aiHello').innerHTML = '<b>Hola, ' + u.name.split(' ')[0] + '</b><br>aquí tienes el análisis de hoy';
+      }
+    }
+  } catch(e) {}
+
+  async function askAiAssistant(promptText) {
+    var respBox = document.getElementById('aiChatResponse');
+    respBox.style.display = 'block';
+    respBox.innerHTML = '<span style="color:var(--green);">⚡ Analizando datos en tiempo real con Gemini AI...</span>';
+
+    var token = localStorage.getItem('cma_token') || '';
+
+    try {
+      var res = await fetch('/api/dashboard/ai-analysis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ prompt: promptText })
+      });
+      var data = await res.json();
+      if (!res.ok) {
+        respBox.textContent = data.error || 'Error al conectar con el Asistente IA.';
+        return;
+      }
+      respBox.innerHTML = '<strong>Análisis IA:</strong><br>' + data.analysis;
+    } catch(err) {
+      respBox.textContent = 'Error de conexión con el servidor IA.';
+    }
+  }
+
+  document.getElementById('aiSendBtn').addEventListener('click', function() {
+    var val = document.getElementById('aiChatInput').value.trim();
+    if (!val) return;
+    askAiAssistant(val);
+  });
+
+  document.getElementById('aiChatInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      var val = this.value.trim();
+      if (!val) return;
+      askAiAssistant(val);
+    }
+  });
+
+  document.getElementById('aiOrb').addEventListener('click', function() {
+    askAiAssistant('');
+  });
+
+  document.getElementById('micBtn').addEventListener('click', function() {
+    var queries = [
+      "¿Cuál es el estado actual de las ventas y márgenes?",
+      "Recomienda acciones para reducir retrasos en la zona sur",
+      "Analiza la retención de clientes y oportunidades de mejora"
+    ];
+    var randomQuery = queries[Math.floor(Math.random() * queries.length)];
+    document.getElementById('aiChatInput').value = randomQuery;
+    document.getElementById('micLabel').textContent = '🎙 Dictado: "' + randomQuery + '"';
+    askAiAssistant(randomQuery);
+    setTimeout(function() {
+      document.getElementById('micLabel').textContent = 'Pulsa para hablar / dictar';
+    }, 4000);
+  });
+</script>
+</body>
+</html>

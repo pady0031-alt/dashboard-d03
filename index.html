@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro de Mando IA — El panel de control de tu empresa</title>
+<meta name="description" content="Un único panel en tiempo real para ventas, operaciones, clientes y sostenibilidad, con un asistente de IA que prioriza lo importante. Conecta Excel o Power BI en minutos.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="container nav-row">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">GR</div>
+      <div class="brand-text">Centro de Mando IA<span>GONZALO ROSENDO · DATA &amp; FORMATION</span></div>
+    </a>
+    <nav class="links">
+      <a href="index.html" class="active">Inicio</a>
+      <a href="caracteristicas.html">Características</a>
+      <a href="precios.html">Precios</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="registro.html">Registro</a>
+      <div class="mobile-menu-cta">
+        <a href="login.html" class="btn btn-ghost">Iniciar Sesión</a>
+        <a href="panel.html" class="btn btn-primary">Acceder al Panel</a>
+      </div>
+    </nav>
+    <div class="nav-cta">
+      <a href="login.html" class="btn btn-ghost">Iniciar sesión</a>
+      <a href="panel.html" class="btn btn-primary">Acceder al Panel</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="grid-bg"></div>
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Centro de mando · para empresas</div>
+        <h1>Toda tu empresa,<br><em>en una sola pantalla.</em></h1>
+        <p class="lead">Ventas, clientes, operaciones, cadena de suministro y sostenibilidad en tiempo real — con un asistente de IA que te dice qué mirar antes de que se convierta en un problema.</p>
+        <div class="cta-row">
+          <a href="panel.html" class="btn btn-primary">Entrar al Panel en Vivo →</a>
+          <a href="registro.html" class="btn btn-ghost">Crear Cuenta Gratis</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b>10 módulos</b><span>configurables</span></div>
+          <div class="hero-stat"><b>Excel &amp; Power BI</b><span>importación directa</span></div>
+          <div class="hero-stat"><b>Tiempo real</b><span>sin informes manuales</span></div>
+        </div>
+      </div>
+      <div class="hero-cockpit hud" id="heroCockpit">
+        <!-- TOP HUD CONSOLE BAR -->
+        <div class="cockpit-topbar">
+          <div class="cockpit-status-dot">
+            <span class="live-pulse"></span>
+            <span class="cockpit-status-text" id="cockpitStatusLabel"><strong>TELEMETRÍA EN VIVO</strong> · 12ms</span>
+          </div>
+          <div class="cockpit-mode-badges">
+            <span class="cockpit-pill"><span class="pill-dot"></span> Excel &amp; Power BI</span>
+            <span class="cockpit-pill active"><span class="pill-dot green"></span> IA Activa</span>
+          </div>
+        </div>
+
+        <!-- COCKPIT NAVIGATION TABS (Interactive Switcher) -->
+        <div class="cockpit-tabs" role="tablist">
+          <button class="cockpit-tab active" id="tabCockpitVentas" onclick="switchHeroCockpitTab('ventas')">
+            <span class="tab-icon">📊</span> <span>Ventas &amp; KPIs</span>
+          </button>
+          <button class="cockpit-tab" id="tabCockpitOperaciones" onclick="switchHeroCockpitTab('operaciones')">
+            <span class="tab-icon">🚚</span> <span>Operaciones &amp; Stock</span>
+          </button>
+          <button class="cockpit-tab" id="tabCockpitClientes" onclick="switchHeroCockpitTab('clientes')">
+            <span class="tab-icon">👥</span> <span>Clientes &amp; Retención</span>
+          </button>
+        </div>
+
+        <!-- MAIN DYNAMIC CONTENT CONTAINER -->
+        <div class="cockpit-body">
+          
+          <!-- KPI ROW -->
+          <div class="cockpit-kpi-grid">
+            <div class="cockpit-kpi-card">
+              <div class="kpi-label" id="kpiHeroLabel1">Facturación Mes</div>
+              <div class="kpi-val" id="kpiHeroVal1">€2.847.654</div>
+              <div class="kpi-trend up" id="kpiHeroTrend1">▲ +15.3% <span id="kpiHeroSub1">vs objetivo</span></div>
+              <div class="kpi-sparkline" id="kpiHeroSpark1">
+                <div class="spark-bar" style="height:45%;"></div>
+                <div class="spark-bar" style="height:60%;"></div>
+                <div class="spark-bar" style="height:55%;"></div>
+                <div class="spark-bar" style="height:78%;"></div>
+                <div class="spark-bar" style="height:70%;"></div>
+                <div class="spark-bar" style="height:90%;"></div>
+                <div class="spark-bar active" style="height:100%;"></div>
+              </div>
+            </div>
+            
+            <div class="cockpit-kpi-card">
+              <div class="kpi-label" id="kpiHeroLabel2">Margen Bruto</div>
+              <div class="kpi-val" id="kpiHeroVal2">34.8%</div>
+              <div class="kpi-trend up" id="kpiHeroTrend2">▲ +2.4% <span id="kpiHeroSub2">rentabilidad</span></div>
+              <div class="kpi-progress-bar">
+                <div class="kpi-prog-fill" id="kpiHeroProg2" style="width:84%;"></div>
+              </div>
+            </div>
+
+            <div class="cockpit-kpi-card">
+              <div class="kpi-label" id="kpiHeroLabel3">Nivel de Servicio</div>
+              <div class="kpi-val" id="kpiHeroVal3">98.6%</div>
+              <div class="kpi-trend neutral" id="kpiHeroTrend3">● 48 tiendas <span id="kpiHeroSub3">activas</span></div>
+              <div class="kpi-progress-bar">
+                <div class="kpi-prog-fill green" id="kpiHeroProg3" style="width:98%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EXECUTIVE AI INSIGHT BANNER -->
+          <div class="cockpit-ai-card">
+            <div class="ai-card-header">
+              <div class="ai-card-badge">
+                <span class="ai-sparkle">✦</span>
+                <strong>ASISTENTE EJECUTIVO IA</strong>
+              </div>
+              <span class="ai-card-time" id="aiHeroTime">Actualizado en tiempo real · 99.4% precisión</span>
+            </div>
+            <div class="ai-card-body" id="aiHeroText">
+              <p>💡 <strong>Oportunidad detectada:</strong> Las ventas en el canal Retail superan la previsión un <strong>+15.3%</strong>. Se recomienda incrementar la reposición de stock en la delegación Norte antes del fin de semana.</p>
+            </div>
+          </div>
+
+          <!-- MINI METRICS & SYNC FOOTER -->
+          <div class="cockpit-footer-row">
+            <div class="cockpit-sync-badge">
+              <span class="sync-icon">⚡</span>
+              <span><strong>Conectores activos:</strong> Excel .xlsx · Power BI · ERP</span>
+            </div>
+            <a href="panel.html" class="cockpit-live-link">Abrir Centro de Mando →</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF STRIP -->
+  <section class="proof">
+    <div class="container proof-row reveal">
+      <span class="proof-item">RETAIL</span>
+      <span class="proof-item">LOGÍSTICA</span>
+      <span class="proof-item">ALIMENTACIÓN</span>
+      <span class="proof-item">SERVICIOS PROFESIONALES</span>
+      <span class="proof-item">FRANQUICIAS</span>
+      <span class="proof-item">DISTRIBUCIÓN</span>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section-pad">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Qué incluye</div>
+        <h2>Un centro de mando, no otro informe más.</h2>
+        <p class="lead" style="margin-top:12px;">Cada módulo se activa o desactiva según lo que tu equipo necesita ver — nada de paneles genéricos con métricas que nadie usa.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="hud feat-card reveal">
+          <div class="feat-icon">◎</div>
+          <h3>KPIs en tiempo real</h3>
+          <p>Ventas, beneficio, pedidos, ticket medio y satisfacción actualizados al minuto, sin esperar al cierre del mes.</p>
+        </div>
+        <div class="hud feat-card reveal">
+          <div class="feat-icon">▤</div>
+          <h3>Módulos configurables</h3>
+          <p>Clientes, operaciones, cadena de suministro, talento, sostenibilidad... activa solo lo que tu empresa necesita.</p>
+        </div>
+        <div class="hud feat-card reveal">
+          <div class="feat-icon">⇪</div>
+          <h3>Importación desde Excel</h3>
+          <p>Sube tu hoja de cálculo y el panel se actualiza al instante. Sin integraciones complejas ni esperas de IT.</p>
+        </div>
+        <div class="hud feat-card reveal">
+          <div class="feat-icon">▥</div>
+          <h3>Conexión con Power BI</h3>
+          <p>Inserta tus informes ya publicados y combínalos con el resto de tus datos en un mismo lugar.</p>
+        </div>
+        <div class="hud feat-card reveal">
+          <div class="feat-icon">✦</div>
+          <h3>Asistente de IA</h3>
+          <p>Detecta oportunidades, atenciones y riesgos automáticamente, y te los explica en lenguaje llano.</p>
+        </div>
+        <div class="hud feat-card reveal">
+          <div class="feat-icon">⬡</div>
+          <h3>Multiempresa y accesos</h3>
+          <p>Un panel por tienda, delegación o departamento, con permisos independientes para cada equipo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREVIEW -->
+  <section class="section-pad" style="padding-top:0;">
+    <div class="container">
+      <div class="hud preview reveal">
+        <div class="preview-topbar">
+          <div class="preview-dots"><span></span><span></span><span></span></div>
+          <span class="mono" style="font-size:11px;color:var(--text-faint);">centro-mando.tuempresa.com</span>
+          <span class="mono" style="font-size:11px;color:var(--green);">● en vivo</span>
+        </div>
+        <div class="preview-kpis">
+          <div class="mini-kpi"><div class="eb">Ventas totales</div><div class="val">€2.847.654</div><div class="delta">▲ 15.3%</div></div>
+          <div class="mini-kpi"><div class="eb">Clientes activos</div><div class="val">2.409</div><div class="delta">▲ 13.1%</div></div>
+          <div class="mini-kpi"><div class="eb">Nivel de servicio</div><div class="val">96%</div><div class="delta">▲ 4.3%</div></div>
+          <div class="mini-kpi"><div class="eb">Satisfacción</div><div class="val">4.8/5</div><div class="delta">▲ 9.1%</div></div>
+        </div>
+        <div class="preview-panels">
+          <div class="mini-panel">
+            <h4>Retrasos por región</h4>
+            <div class="mini-bar-row"><span>Norte</span><div class="mini-track"><div class="mini-fill" style="width:18%;"></div></div><span>1.8%</span></div>
+            <div class="mini-bar-row"><span>Centro</span><div class="mini-track"><div class="mini-fill" style="width:23%;"></div></div><span>2.3%</span></div>
+            <div class="mini-bar-row"><span>Este</span><div class="mini-track"><div class="mini-fill" style="width:26%;"></div></div><span>2.6%</span></div>
+            <div class="mini-bar-row"><span>Sur</span><div class="mini-track"><div class="mini-fill" style="width:21%;"></div></div><span>2.1%</span></div>
+          </div>
+          <div class="mini-panel">
+            <h4>Asistente IA</h4>
+            <p style="font-size:11px;color:var(--text-dim);line-height:1.6;">▲ Ventas +15.3% vs mes anterior.<br>▲ Retención de clientes 89%.<br>⚠ Rotación de personal sube a 8.1%.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="section-pad" style="background:var(--bg-soft);border-top:1px solid var(--panel-border);border-bottom:1px solid var(--panel-border);">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Cómo funciona</div>
+        <h2>De hoja de cálculo a panel de control en un día.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="num">01</div>
+          <h3>Conectas tus datos</h3>
+          <p>Sube un Excel con tu plantilla o inserta tu informe de Power BI ya publicado.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">02</div>
+          <h3>Activas los módulos</h3>
+          <p>Eliges qué áreas mostrar: ventas, clientes, operaciones, sostenibilidad...</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">03</div>
+          <h3>Tu equipo lo usa</h3>
+          <p>Cada responsable ve su panel, en tiempo real, sin pedir informes a nadie.</p>
+        </div>
+        <div class="step reveal">
+          <div class="num">04</div>
+          <h3>La IA prioriza</h3>
+          <p>El asistente destaca oportunidades y riesgos antes de que los detectes tú.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING TEASER -->
+  <section class="section-pad">
+    <div class="container">
+      <div class="section-head reveal" style="margin-bottom:36px;">
+        <div class="eyebrow">Precios</div>
+        <h2>Un plan para cada tamaño de equipo.</h2>
+      </div>
+      <div class="pricing-grid reveal">
+        <div class="hud price-card">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">€49<span>/mes</span></div>
+          <div class="plan-desc">Para una tienda o equipo pequeño empezando a centralizar datos.</div>
+          <ul>
+            <li>Hasta 4 módulos activos</li>
+            <li>Importación desde Excel</li>
+            <li>1 usuario</li>
+          </ul>
+          <a href="precios.html" class="btn btn-ghost btn-block">Ver detalles</a>
+        </div>
+        <div class="hud price-card featured">
+          <div class="price-badge">Más elegido</div>
+          <div class="plan-name">Business</div>
+          <div class="plan-price">€149<span>/mes</span></div>
+          <div class="plan-desc">Para empresas con varias tiendas, delegaciones o departamentos.</div>
+          <ul>
+            <li>Todos los módulos</li>
+            <li>Excel + Power BI</li>
+            <li>Hasta 10 usuarios</li>
+            <li>Asistente de IA</li>
+          </ul>
+          <a href="precios.html" class="btn btn-primary btn-block">Ver detalles</a>
+        </div>
+        <div class="hud price-card">
+          <div class="plan-name">Enterprise</div>
+          <div class="plan-price">A medida</div>
+          <div class="plan-desc">Para grupos y cadenas con necesidades específicas de integración.</div>
+          <ul>
+            <li>Usuarios ilimitados</li>
+            <li>Integraciones a medida</li>
+            <li>Soporte dedicado</li>
+          </ul>
+          <a href="contacto.html" class="btn btn-ghost btn-block">Hablar con ventas</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-pad" style="padding-top:0;">
+    <div class="container" style="max-width:760px;">
+      <div class="section-head reveal">
+        <div class="eyebrow">Preguntas frecuentes</div>
+        <h2 style="font-size:26px;margin-top:14px;">Integración, seguridad y uso diario</h2>
+        <p class="lead" style="margin-top:10px;font-size:15px;">Respuestas a las dudas más comunes sobre la conexión de tus fuentes de datos, la privacidad de tu negocio y la operativa con el asistente de IA.</p>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Cómo se conecta el Centro de Mando con mis hojas de Excel o Power BI?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Puedes descargar nuestra plantilla estructurada de Excel, volcar tus datos y subirla directamente para una actualización inmediata. Si ya utilizas Power BI, puedes integrar tus informes publicados en cuestión de minutos pegando el enlace de tu reporte para unificarlo con el resto de tus módulos.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Es posible conectar ERPs, CRMs o bases de datos a medida?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Sí. En el plan Enterprise disponemos de conectores y APIs para enlazar directamente tus sistemas de gestión (SAP, Navision, Holded), CRMs (Salesforce, HubSpot) o bases de datos SQL, automatizando la sincronización continua sin intervención manual.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Cómo se garantiza la seguridad y privacidad de los datos de mi empresa?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Toda la información se transmite cifrada mediante protocolo SSL/TLS de extremo a extremo y se procesa en servidores seguros ubicados en la Unión Europea bajo estricto cumplimiento del RGPD. Tus datos empresariales son 100% privados y nunca se comparten con terceros ni se utilizan para entrenar modelos públicos.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Cómo se configuran los permisos de acceso y el modo multiempresa?<span class="plus">+</span></div>
+        <div class="faq-a"><p>El sistema cuenta con un gestor de roles y permisos por tienda, delegación o departamento. Puedes definir exactamente qué métricas e indicadores visualiza cada responsable, manteniendo la confidencialidad entre departamentos.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Cuánto tiempo se requiere para poner en marcha el panel?<span class="plus">+</span></div>
+        <div class="faq-a"><p>La puesta en marcha puede completarse en menos de un día. Solo necesitas activar los módulos relevantes para tu operativa y cargar tu primer archivo o informe, sin necesidad de desarrollos a medida ni instalaciones en servidores locales.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Qué aporta el Asistente de IA y cómo ayuda a la toma de decisiones?<span class="plus">+</span></div>
+        <div class="faq-a"><p>El asistente analiza constantemente el comportamiento de tus KPIs (ventas, márgenes, cadena de suministro, satisfacción) y genera resúmenes claros con alertas preventivas sobre riesgos emergentes y sugerencias de optimización antes de que afecten a tu operativa.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <div class="faq-q">¿Se puede consultar el panel en tiempo real desde el móvil o tablet?<span class="plus">+</span></div>
+        <div class="faq-a"><p>Sí, la interfaz está completamente adaptada a dispositivos móviles y tablets. Podrás comprobar el estado de tus operaciones, ventas y alertas en cualquier momento y lugar con una experiencia visual fluida y rápida.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="cta-band">
+    <div class="container reveal">
+      <div class="eyebrow" style="justify-content:center;">Empieza hoy</div>
+      <h2>¿Vemos tu empresa en un único panel?</h2>
+      <p class="lead" style="margin:0 auto;text-align:center;">15 minutos, tus propios datos, sin compromiso.</p>
+      <div class="cta-row">
+        <a href="contacto.html" class="btn btn-primary">Solicitar demo →</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="brand" style="margin-bottom:14px;">
+          <div class="brand-mark">GR</div>
+          <div class="brand-text">Centro de Mando IA<span>GONZALO ROSENDO · DATA &amp; FORMATION</span></div>
+        </div>
+        <p>Paneles de control con IA para empresas que quieren decidir con datos, no con intuición.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Producto</h5>
+        <a href="caracteristicas.html">Características</a>
+        <a href="precios.html">Precios</a>
+        <a href="contacto.html">Solicitar demo</a>
+      </div>
+      <div class="footer-col">
+        <h5>Empresa</h5>
+        <a href="contacto.html">Contacto</a>
+        <p>Sevilla, España</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contacto</h5>
+        <p>hola@centrodemando.ia</p>
+        <p>+34 900 000 000</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Gonzalo Rosendo — Data &amp; Formation</span>
+      <span>Centro de Mando IA</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
