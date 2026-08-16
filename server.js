@@ -55,6 +55,7 @@ const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const LOGS_FILE = path.join(DATA_DIR, 'audit_logs.json');
 const TICKETS_FILE = path.join(DATA_DIR, 'tickets.json');
 const METRICS_FILE = path.join(DATA_DIR, 'metrics.json');
+const SESSIONS_FILE = path.join(DATA_DIR, 'sessions.json');
 
 // Password security helpers
 function hashPassword(password, salt) {
@@ -68,13 +69,43 @@ function verifyPassword(password, storedHash, salt) {
   return hash === storedHash;
 }
 
-// In-memory sessions token map: token -> { userId, expiresAt }
-const sessions = new Map();
+// Persistent sessions token map: token -> { userId, expiresAt }
+function loadSessions() {
+  try {
+    if (fs.existsSync(SESSIONS_FILE)) {
+      const raw = fs.readFileSync(SESSIONS_FILE, 'utf8');
+      const arr = JSON.parse(raw);
+      const map = new Map();
+      const now = Date.now();
+      arr.forEach(([token, sess]) => {
+        if (sess && sess.expiresAt > now) {
+          map.set(token, sess);
+        }
+      });
+      return map;
+    }
+  } catch (e) {
+    console.error('Error loading sessions:', e);
+  }
+  return new Map();
+}
+
+function saveSessions(sessionsMap) {
+  try {
+    const arr = Array.from(sessionsMap.entries());
+    fs.writeFileSync(SESSIONS_FILE, JSON.stringify(arr, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Error saving sessions:', e);
+  }
+}
+
+const sessions = loadSessions();
 
 function generateToken(userId) {
   const token = crypto.randomBytes(32).toString('hex');
   const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
   sessions.set(token, { userId, expiresAt });
+  saveSessions(sessions);
   return token;
 }
 
@@ -674,6 +705,7 @@ function getAuthUser(req) {
 
   if (Date.now() > session.expiresAt) {
     sessions.delete(token);
+    saveSessions(sessions);
     return null;
   }
 
@@ -916,6 +948,7 @@ app.get('/api/auth/me', requireAuth, (req, res) => {
 app.post('/api/auth/logout', requireAuth, (req, res) => {
   if (req.token) {
     sessions.delete(req.token);
+    saveSessions(sessions);
   }
   addAuditLog(req.user.email, 'CIERRE_SESION', 'Sesión cerrada por el usuario');
   res.json({ success: true, message: 'Sesión cerrada correctamente' });

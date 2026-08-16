@@ -721,6 +721,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
+  function getAuthHeaders() {
+    var token = localStorage.getItem('cma_token') || '';
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    };
+  }
   var modules=[
     {key:"resumen",label:"Resumen general (KPIs)",desc:"Ventas, beneficio, pedidos y satisfacción",on:true},
     {key:"clientes",label:"Clientes",desc:"Clientes activos, retención y regiones",on:true},
@@ -1047,7 +1054,7 @@
   });
 
   // Load user auth, admin status, and saved dashboard config from database
-  fetch('/api/auth/me')
+  fetch('/api/auth/me', { headers: getAuthHeaders() })
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data && data.user && data.user.role === 'admin') {
@@ -1056,7 +1063,7 @@
       }
     }).catch(function(err) {});
 
-  fetch('/api/dashboard/me')
+  fetch('/api/dashboard/me', { headers: getAuthHeaders() })
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data && data.success && data.dashboardConfig && data.dashboardConfig.modules) {
@@ -1074,7 +1081,7 @@
     var activeKeys = modules.filter(function(m) { return m.on; }).map(function(m) { return m.key; });
     fetch('/api/dashboard/me', {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ modules: activeKeys })
     }).catch(function(err) {});
   }
@@ -1115,7 +1122,7 @@
     if (!tbody) return;
     tbody.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text-dim);">Cargando registros de base de datos...</td></tr>';
     
-    fetch('/api/admin/dashboards')
+    fetch('/api/admin/dashboards', { headers: getAuthHeaders() })
       .then(function(res) { return res.json(); })
       .then(function(data) {
         if (data && data.success && data.records) {
@@ -1149,7 +1156,7 @@
     var defaultMods = ['resumen', 'clientes', 'operaciones', 'suministro', 'proyectos', 'talento', 'sostenibilidad', 'ventas-geo', 'noticias', 'powerbi', 'asistente-ia'];
     fetch('/api/admin/users/' + userId + '/dashboard', {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ modules: defaultMods })
     })
     .then(function(res) { return res.json(); })
@@ -1225,7 +1232,7 @@
       }
       fetch('/api/tickets', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ subject: subj, message: msg })
       })
       .then(function(res) { return res.json(); })
@@ -1247,7 +1254,7 @@
   }
 
   function loadCrmTickets() {
-    fetch('/api/tickets')
+    fetch('/api/tickets', { headers: getAuthHeaders() })
       .then(function(res) { return res.json(); })
       .then(function(data) {
         if (data && data.tickets) {
@@ -1280,7 +1287,7 @@
 
   function loadCrmPortalData() {
     loadCrmTickets();
-    fetch('/api/auth/me')
+    fetch('/api/auth/me', { headers: getAuthHeaders() })
       .then(function(res) { return res.json(); })
       .then(function(data) {
         if (data && data.user) {
@@ -1319,7 +1326,7 @@
       }).catch(function(err) {});
 
     // Load audit logs for history
-    fetch('/api/admin/dashboards')
+    fetch('/api/admin/dashboards', { headers: getAuthHeaders() })
       .then(function(res) { return res.json(); })
       .then(function(data) {
         // If admin or permitted, we can also simulate or fetch user audit logs
