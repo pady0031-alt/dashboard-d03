@@ -267,6 +267,8 @@
         <div class="datebadge" id="today"></div>
         <div class="cfg-btn" id="importBtn"><span class="gear">📊</span> Importar Excel</div>
         <input type="file" id="excelInput" accept=".xlsx,.xls,.csv" style="display:none;">
+        <div class="cfg-btn" id="crmModalBtn" style="background:rgba(62,224,138,0.15);border-color:var(--green);color:var(--green);"><span class="gear" style="color:var(--green);">💼</span> Portal CRM</div>
+        <div class="cfg-btn" id="adminDbBtn" style="display:none;background:rgba(232,193,90,0.15);border-color:var(--amber);color:var(--amber);"><span class="gear" style="color:var(--amber);">🗄️</span> BD: Usuarios & Dashboards</div>
         <div class="cfg-btn" id="cfgOpenBtn"><span class="gear">⚙</span> Configuración</div>
       </div>
     </div>
@@ -493,6 +495,222 @@
             <div id="alertSaveToast" style="font-size:11px;color:var(--green);display:none;">✓ Preferencias guardadas correctamente.</div>
             <button type="button" id="alertSaveBtn" class="cfg-btn" style="background:var(--green-dim);color:var(--text);border:none;padding:8px 16px;border-radius:6px;font-weight:600;cursor:pointer;margin-left:auto;">Guardar Alertas IA</button>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN DB MODAL (Usuarios y sus Dashboards - Solo Administradores) -->
+  <div class="cfg-overlay" id="adminDbOverlay">
+    <div class="cfg-modal" style="max-width:900px; width:95%;">
+      <div class="cfg-head">
+        <h2>Base de Datos: Usuarios & Dashboards (Área Exclusiva de Administradores)</h2>
+        <span class="cfg-close" id="adminDbCloseBtn">✕</span>
+      </div>
+      <div class="cfg-sub" style="margin-bottom:14px;">
+        Gestión centralizada de cuentas de usuario y configuraciones de sus dashboards en tiempo real.
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div id="adminDbStats" style="font-size:12px;color:var(--green);font-weight:600;">Cargando registros...</div>
+        <button type="button" id="adminDbRefreshBtn" class="cfg-btn" style="background:rgba(255,255,255,0.05);color:var(--text);padding:6px 12px;border-radius:6px;cursor:pointer;">🔄 Actualizar BD</button>
+      </div>
+      <div style="max-height:450px; overflow-y:auto; border:1px solid var(--panel-border); border-radius:8px; background:rgba(0,0,0,0.3);">
+        <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:left;">
+          <thead>
+            <tr style="background:rgba(18,32,28,0.9); border-bottom:1px solid var(--panel-border); color:var(--text-dim);">
+              <th style="padding:10px;">Usuario / Rol</th>
+              <th style="padding:10px;">Empresa / Dpto</th>
+              <th style="padding:10px;">Estado</th>
+              <th style="padding:10px;">Módulos Dashboard Activos</th>
+              <th style="padding:10px;text-align:right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="adminDbTableBody">
+            <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text-dim);">Cargando base de datos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRM CLIENT PORTAL MODAL (Historial, Documentos, Tickets, Facturación) -->
+  <div class="cfg-overlay" id="crmModalOverlay">
+    <div class="cfg-modal" style="max-width:920px; width:95%;">
+      <div class="cfg-head">
+        <h2>Portal CRM del Cliente — Centro de Mando IA</h2>
+        <span class="cfg-close" id="crmModalCloseBtn">✕</span>
+      </div>
+      <div class="cfg-sub" style="margin-bottom:14px;">
+        Gestión integral de tu cuenta privada: Panel de usuario, historial de operaciones, documentos, tickets de soporte y datos de facturación.
+      </div>
+      
+      <!-- CRM Tabs -->
+      <div class="cfg-tabs" id="crmTabs">
+        <div class="cfg-tab active" data-crm-tab="profile">👤 Perfil & Panel</div>
+        <div class="cfg-tab" data-crm-tab="operations">📋 Historial Operaciones</div>
+        <div class="cfg-tab" data-crm-tab="documents">📂 Documentos & Excel</div>
+        <div class="cfg-tab" data-crm-tab="tickets">💬 Soporte / Tickets</div>
+        <div class="cfg-tab" data-crm-tab="billing">💳 Facturación & Plan</div>
+      </div>
+
+      <!-- Tab 1: Profile & Session -->
+      <div class="cfg-tab-pane active" id="crmPaneProfile">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div>
+              <div id="crmUserName" style="font-size:16px;font-weight:700;">Cargando usuario...</div>
+              <div id="crmUserEmail" style="font-size:12px;color:var(--text-dim);">...</div>
+            </div>
+            <div id="crmUserRoleBadge" style="background:var(--green-dim);color:var(--green);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;">Usuario</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;margin-top:12px;border-top:1px solid var(--panel-border);padding-top:12px;">
+            <div><strong>Empresa:</strong> <span id="crmUserCompany">—</span></div>
+            <div><strong>Departamento:</strong> <span id="crmUserDept">—</span></div>
+            <div><strong>Último Acceso:</strong> <span id="crmUserLastLogin">—</span></div>
+            <div><strong>Estado de Cuenta:</strong> <span id="crmUserStatus" style="color:var(--green);">Activo</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Operations History -->
+      <div class="cfg-tab-pane" id="crmPaneOperations">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div style="font-size:12px;color:var(--text-dim);">Registro de actividad y operaciones realizadas en tu cuenta.</div>
+          <button type="button" id="crmRefreshLogsBtn" class="cfg-btn" style="background:rgba(255,255,255,0.05);color:var(--text);padding:6px 10px;border-radius:6px;cursor:pointer;">🔄 Actualizar Historial</button>
+        </div>
+        <div style="max-height:360px;overflow-y:auto;border:1px solid var(--panel-border);border-radius:8px;background:rgba(0,0,0,0.3);">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;text-align:left;">
+            <thead>
+              <tr style="background:rgba(18,32,28,0.9);border-bottom:1px solid var(--panel-border);color:var(--text-dim);">
+                <th style="padding:8px 10px;">Fecha / Hora</th>
+                <th style="padding:8px 10px;">Acción CRM</th>
+                <th style="padding:8px 10px;">Detalle de Operación</th>
+              </tr>
+            </thead>
+            <tbody id="crmLogsTableBody">
+              <tr><td colspan="3" style="padding:16px;text-align:center;color:var(--text-dim);">Cargando historial de operaciones...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Downloadable Documents -->
+      <div class="cfg-tab-pane" id="crmPaneDocuments">
+        <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">Descarga manuales, plantillas oficiales de Excel, informes analíticos y guías ejecutivas.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="crmDocsGrid">
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:12px;font-weight:600;">📊 Plantilla Oficial Excel Centro de Mando</div>
+              <div style="font-size:10px;color:var(--text-dim);">Formato XLSX con hojas de ventas, clientes y stock</div>
+            </div>
+            <a href="#" onclick="alert('Descargando plantilla Excel oficial...');return false;" style="background:var(--green-dim);color:var(--green);padding:6px 10px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">Descargar</a>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:12px;font-weight:600;">📘 Guía de Inicio y Configuración de Módulos</div>
+              <div style="font-size:10px;color:var(--text-dim);">PDF (2.4 MB) — Buenas prácticas directivas</div>
+            </div>
+            <a href="#" onclick="alert('Descargando Guía PDF de configuración...');return false;" style="background:var(--green-dim);color:var(--green);padding:6px 10px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">Descargar</a>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:12px;font-weight:600;">📈 Informe Consolidado de Sostenibilidad ESG</div>
+              <div style="font-size:10px;color:var(--text-dim);">Certificado de emisiones de carbono y huella</div>
+            </div>
+            <a href="#" onclick="alert('Descargando Informe ESG...');return false;" style="background:var(--green-dim);color:var(--green);padding:6px 10px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">Descargar</a>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:12px;font-weight:600;">📑 Resumen Ejecutivo Anual 2026</div>
+              <div style="font-size:10px;color:var(--text-dim);">Documento estratégico de analítica predictiva</div>
+            </div>
+            <a href="#" onclick="alert('Descargando Resumen Ejecutivo...');return false;" style="background:var(--green-dim);color:var(--green);padding:6px 10px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;">Descargar</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Support / Tickets -->
+      <div class="cfg-tab-pane" id="crmPaneTickets">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div style="font-size:12px;color:var(--text-dim);">¿Necesitas asistencia técnica o consultar sobre conectores ERP? Abre un ticket.</div>
+          <button type="button" id="crmNewTicketBtn" class="cfg-btn" style="background:var(--green-dim);color:var(--green);padding:6px 12px;border-radius:6px;font-weight:600;cursor:pointer;">+ Nuevo Ticket</button>
+        </div>
+
+        <div id="crmNewTicketForm" style="display:none;background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:14px;margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Crear Solicitud de Soporte</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <input type="text" id="ticketSubject" placeholder="Asunto (ej. Conexión API Power BI o consulta de facturación)" style="background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;">
+            <textarea id="ticketMessage" rows="3" placeholder="Describe detalladamente tu consulta..." style="background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;font-family:inherit;"></textarea>
+            <div style="display:flex;justify-content:flex-end;gap:8px;">
+              <button type="button" id="ticketCancelBtn" class="cfg-btn" style="cursor:pointer;">Cancelar</button>
+              <button type="button" id="ticketSubmitBtn" class="cfg-btn" style="background:var(--green);color:#000;font-weight:600;cursor:pointer;border:none;">Enviar Ticket</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="max-height:300px;overflow-y:auto;border:1px solid var(--panel-border);border-radius:8px;background:rgba(0,0,0,0.3);">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;text-align:left;">
+            <thead>
+              <tr style="background:rgba(18,32,28,0.9);border-bottom:1px solid var(--panel-border);color:var(--text-dim);">
+                <th style="padding:8px 10px;">ID / Asunto</th>
+                <th style="padding:8px 10px;">Fecha</th>
+                <th style="padding:8px 10px;">Estado</th>
+                <th style="padding:8px 10px;text-align:right;">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="crmTicketsTableBody">
+              <tr>
+                <td style="padding:10px;"><strong>TCK-1092</strong><br><span style="color:var(--text-dim);font-size:10px;">Consulta sobre exportación de datos de sostenibilidad</span></td>
+                <td style="padding:10px;">12/08/2026</td>
+                <td style="padding:10px;"><span style="color:var(--green);">● Resuelto</span></td>
+                <td style="padding:10px;text-align:right;"><button type="button" onclick="alert('Ticket cerrado con respuesta del equipo técnico de soporte.');" style="background:rgba(255,255,255,0.05);color:var(--text);border:1px solid var(--panel-border);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;">Ver</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 5: Billing & Invoices -->
+      <div class="cfg-tab-pane" id="crmPaneBilling">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div>
+              <div id="crmSubPlanName" style="font-size:14px;font-weight:700;">Plan Business / Pro Mensual</div>
+              <div id="crmSubStatus" style="font-size:11px;color:var(--green);">Suscripción Activa (Renovación automática)</div>
+            </div>
+            <div style="text-align:right;">
+              <div id="crmSubPrice" style="font-size:16px;font-weight:700;color:var(--green);">129 € <span style="font-size:11px;color:var(--text-dim);font-weight:normal;">/mes</span></div>
+              <div id="crmSubRenewal" style="font-size:10px;color:var(--text-dim);">Próximo cobro: 12/09/2026</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;border-top:1px solid var(--panel-border);padding-top:12px;flex-wrap:wrap;">
+            <button type="button" onclick="alert('Puedes cambiar de plan o actualizar tus datos de pago desde la sección Precios de la web pública.');" class="cfg-btn" style="background:rgba(255,255,255,0.05);color:var(--text);cursor:pointer;">Gestionar Suscripción</button>
+            <button type="button" onclick="alert('Método de pago cifrado con Visa terminada en 4242.');" class="cfg-btn" style="background:rgba(255,255,255,0.05);color:var(--text);cursor:pointer;">💳 Datos de Pago (Tarjeta)</button>
+          </div>
+        </div>
+
+        <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Historial de Facturación y Facturas Descargables</div>
+        <div style="max-height:220px;overflow-y:auto;border:1px solid var(--panel-border);border-radius:8px;background:rgba(0,0,0,0.3);">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;text-align:left;">
+            <thead>
+              <tr style="background:rgba(18,32,28,0.9);border-bottom:1px solid var(--panel-border);color:var(--text-dim);">
+                <th style="padding:8px 10px;">Nº Factura</th>
+                <th style="padding:8px 10px;">Fecha</th>
+                <th style="padding:8px 10px;">Total</th>
+                <th style="padding:8px 10px;">Estado</th>
+                <th style="padding:8px 10px;text-align:right;">PDF</th>
+              </tr>
+            </thead>
+            <tbody id="crmInvoicesTableBody">
+              <tr>
+                <td style="padding:8px 10px;"><strong>FAC-2026-0042</strong></td>
+                <td style="padding:8px 10px;">12/07/2026</td>
+                <td style="padding:8px 10px;">156.09 €</td>
+                <td style="padding:8px 10px;"><span style="color:var(--green);">● Pagada</span></td>
+                <td style="padding:8px 10px;text-align:right;"><button type="button" onclick="alert('Descargando factura en PDF oficial...');" style="background:var(--green-dim);color:var(--green);border:1px solid var(--panel-border);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:10px;">PDF</button></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -827,6 +1045,305 @@
       toast.style.display = 'none';
     }, 4000);
   });
+
+  // Load user auth, admin status, and saved dashboard config from database
+  fetch('/api/auth/me')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data && data.user && data.user.role === 'admin') {
+        var adminBtn = document.getElementById('adminDbBtn');
+        if (adminBtn) adminBtn.style.display = 'flex';
+      }
+    }).catch(function(err) {});
+
+  fetch('/api/dashboard/me')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data && data.success && data.dashboardConfig && data.dashboardConfig.modules) {
+        var activeMods = data.dashboardConfig.modules;
+        modules.forEach(function(m) {
+          m.on = activeMods.indexOf(m.key) > -1;
+        });
+        renderNav();
+        renderCfgGrid();
+        modules.forEach(function(m) { applyModuleState(m.key, m.on); });
+      }
+    }).catch(function(err) {});
+
+  function saveMyDashboardConfig() {
+    var activeKeys = modules.filter(function(m) { return m.on; }).map(function(m) { return m.key; });
+    fetch('/api/dashboard/me', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ modules: activeKeys })
+    }).catch(function(err) {});
+  }
+
+  var origToggleModule = window.toggleModule || toggleModule;
+  window.toggleModule = function(key) {
+    origToggleModule(key);
+    saveMyDashboardConfig();
+  };
+
+  // Admin DB Modal logic
+  var adminDbOverlay = document.getElementById('adminDbOverlay');
+  var adminDbBtn = document.getElementById('adminDbBtn');
+  if (adminDbBtn) {
+    adminDbBtn.addEventListener('click', function() {
+      adminDbOverlay.classList.add('open');
+      loadAdminDashboardsDatabase();
+    });
+  }
+  var adminDbCloseBtn = document.getElementById('adminDbCloseBtn');
+  if (adminDbCloseBtn) {
+    adminDbCloseBtn.addEventListener('click', function() {
+      adminDbOverlay.classList.remove('open');
+    });
+  }
+  if (adminDbOverlay) {
+    adminDbOverlay.addEventListener('click', function(e) {
+      if (e.target === adminDbOverlay) adminDbOverlay.classList.remove('open');
+    });
+  }
+  var adminDbRefreshBtn = document.getElementById('adminDbRefreshBtn');
+  if (adminDbRefreshBtn) {
+    adminDbRefreshBtn.addEventListener('click', loadAdminDashboardsDatabase);
+  }
+
+  function loadAdminDashboardsDatabase() {
+    var tbody = document.getElementById('adminDbTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text-dim);">Cargando registros de base de datos...</td></tr>';
+    
+    fetch('/api/admin/dashboards')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.success && data.records) {
+          document.getElementById('adminDbStats').textContent = 'Total registros en base de datos: ' + data.totalUsers + ' usuarios';
+          var html = '';
+          data.records.forEach(function(rec) {
+            var modCount = rec.dashboardConfig && rec.dashboardConfig.modules ? rec.dashboardConfig.modules.length : 0;
+            var modsText = rec.dashboardConfig && rec.dashboardConfig.modules ? rec.dashboardConfig.modules.join(', ') : 'Ninguno';
+            html += '<tr style="border-bottom:1px solid var(--panel-border);">' +
+              '<td style="padding:10px;"><strong>' + rec.name + '</strong><br><span style="color:var(--text-dim);font-size:10px;">' + rec.email + ' (' + rec.role.toUpperCase() + ')</span></td>' +
+              '<td style="padding:10px;">' + rec.company + '<br><span style="color:var(--text-dim);font-size:10px;">' + rec.department + '</span></td>' +
+              '<td style="padding:10px;"><span style="color:' + (rec.status === 'activo' ? 'var(--green)' : 'var(--red)') + ';">● ' + rec.status + '</span></td>' +
+              '<td style="padding:10px; max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + modsText + '"><strong>' + modCount + ' módulos</strong><br><span style="color:var(--text-dim);font-size:10px;">' + modsText + '</span></td>' +
+              '<td style="padding:10px; text-align:right;">' +
+                '<button type="button" onclick="adminResetUserDashboard(\'' + rec.id + '\')" style="background:rgba(62,224,138,0.15);border:1px solid var(--panel-border);color:var(--green);padding:4px 8px;border-radius:4px;cursor:pointer;font-size:10px;" title="Restaurar dashboard por defecto">Restaurar</button>' +
+              '</td>' +
+            '</tr>';
+          });
+          tbody.innerHTML = html;
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--red);">Error al cargar registros o acceso restringido.</td></tr>';
+        }
+      })
+      .catch(function(err) {
+        tbody.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--red);">Error de conexión con el servidor.</td></tr>';
+      });
+  }
+
+  window.adminResetUserDashboard = function(userId) {
+    if (!confirm('¿Restaurar la configuración del dashboard para este usuario?')) return;
+    var defaultMods = ['resumen', 'clientes', 'operaciones', 'suministro', 'proyectos', 'talento', 'sostenibilidad', 'ventas-geo', 'noticias', 'powerbi', 'asistente-ia'];
+    fetch('/api/admin/users/' + userId + '/dashboard', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ modules: defaultMods })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data && data.success) {
+        alert('¡Dashboard del usuario restaurado correctamente!');
+        loadAdminDashboardsDatabase();
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo actualizar'));
+      }
+    });
+  };
+
+  // CRM Client Portal Modal Logic
+  var crmModalOverlay = document.getElementById('crmModalOverlay');
+  var crmModalBtn = document.getElementById('crmModalBtn');
+  if (crmModalBtn) {
+    crmModalBtn.addEventListener('click', function() {
+      crmModalOverlay.classList.add('open');
+      loadCrmPortalData();
+    });
+  }
+  var crmModalCloseBtn = document.getElementById('crmModalCloseBtn');
+  if (crmModalCloseBtn) {
+    crmModalCloseBtn.addEventListener('click', function() {
+      crmModalOverlay.classList.remove('open');
+    });
+  }
+  if (crmModalOverlay) {
+    crmModalOverlay.addEventListener('click', function(e) {
+      if (e.target === crmModalOverlay) crmModalOverlay.classList.remove('open');
+    });
+  }
+
+  // CRM Tabs switching
+  document.querySelectorAll('#crmTabs .cfg-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#crmTabs .cfg-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('#crmModalOverlay .cfg-tab-pane').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      var targetTab = this.getAttribute('data-crm-tab');
+      if (targetTab === 'profile') document.getElementById('crmPaneProfile').classList.add('active');
+      else if (targetTab === 'operations') document.getElementById('crmPaneOperations').classList.add('active');
+      else if (targetTab === 'documents') document.getElementById('crmPaneDocuments').classList.add('active');
+      else if (targetTab === 'tickets') document.getElementById('crmPaneTickets').classList.add('active');
+      else if (targetTab === 'billing') document.getElementById('crmPaneBilling').classList.add('active');
+    });
+  });
+
+  // New ticket toggle form
+  var crmNewTicketBtn = document.getElementById('crmNewTicketBtn');
+  var crmNewTicketForm = document.getElementById('crmNewTicketForm');
+  var ticketCancelBtn = document.getElementById('ticketCancelBtn');
+  var ticketSubmitBtn = document.getElementById('ticketSubmitBtn');
+
+  if (crmNewTicketBtn && crmNewTicketForm) {
+    crmNewTicketBtn.addEventListener('click', function() {
+      crmNewTicketForm.style.display = 'block';
+    });
+  }
+  if (ticketCancelBtn && crmNewTicketForm) {
+    ticketCancelBtn.addEventListener('click', function() {
+      crmNewTicketForm.style.display = 'none';
+    });
+  }
+  if (ticketSubmitBtn) {
+    ticketSubmitBtn.addEventListener('click', function() {
+      var subj = document.getElementById('ticketSubject').value.trim();
+      var msg = document.getElementById('ticketMessage').value.trim();
+      if (!subj || !msg) {
+        alert('Por favor completa el asunto y el mensaje del ticket.');
+        return;
+      }
+      fetch('/api/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject: subj, message: msg })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.success) {
+          document.getElementById('ticketSubject').value = '';
+          document.getElementById('ticketMessage').value = '';
+          crmNewTicketForm.style.display = 'none';
+          alert('¡Ticket enviado con éxito y guardado en Firestore asociado a tu cuenta!');
+          loadCrmTickets();
+        } else {
+          alert('Error al enviar el ticket: ' + (data.error || 'Desconocido'));
+        }
+      })
+      .catch(function(err) {
+        alert('Error de red al enviar el ticket.');
+      });
+    });
+  }
+
+  function loadCrmTickets() {
+    fetch('/api/tickets')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.tickets) {
+          var tbody = document.getElementById('crmTicketsTableBody');
+          if (data.tickets.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="padding:16px;text-align:center;color:var(--text-dim);">No hay tickets de soporte registrados.</td></tr>';
+            return;
+          }
+          var tHtml = '';
+          data.tickets.forEach(function(t) {
+            var statusColor = t.status === 'Resuelto' ? 'var(--green)' : 'var(--amber)';
+            tHtml += '<tr style="border-bottom:1px solid var(--panel-border);">' +
+              '<td style="padding:10px;"><strong>' + t.id + '</strong><br><span style="color:var(--text);font-size:11px;font-weight:600;">' + t.subject + '</span><br><span style="color:var(--text-dim);font-size:10px;">' + (t.message ? t.message.substring(0, 60) : '') + '...</span></td>' +
+              '<td style="padding:10px;color:var(--text-dim);">' + (t.createdAt ? new Date(t.createdAt).toLocaleDateString('es-ES') : 'Hoy') + '</td>' +
+              '<td style="padding:10px;"><span style="color:' + statusColor + ';">● ' + t.status + '</span></td>' +
+              '<td style="padding:10px;text-align:right;"><button type="button" onclick="alert(\'Detalle del ticket ' + t.id + ': ' + (t.message ? t.message.replace(/'/g, "\\'") : '') + '\')" style="background:rgba(255,255,255,0.05);color:var(--text);border:1px solid var(--panel-border);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:10px;">Ver</button></td>' +
+            '</tr>';
+          });
+          tbody.innerHTML = tHtml;
+        }
+      }).catch(function(err) {
+        console.error('Error loading tickets:', err);
+      });
+  }
+
+  var crmRefreshLogsBtn = document.getElementById('crmRefreshLogsBtn');
+  if (crmRefreshLogsBtn) {
+    crmRefreshLogsBtn.addEventListener('click', loadCrmPortalData);
+  }
+
+  function loadCrmPortalData() {
+    loadCrmTickets();
+    fetch('/api/auth/me')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.user) {
+          var u = data.user;
+          document.getElementById('crmUserName').textContent = u.name;
+          document.getElementById('crmUserEmail').textContent = u.email;
+          document.getElementById('crmUserRoleBadge').textContent = u.role === 'admin' ? 'Administrador' : 'Usuario';
+          document.getElementById('crmUserCompany').textContent = u.company || 'Empresa Global S.L.';
+          document.getElementById('crmUserDept').textContent = u.department || 'Dirección & Operaciones';
+          document.getElementById('crmUserLastLogin').textContent = u.lastLogin ? new Date(u.lastLogin).toLocaleString('es-ES') : 'Reciente';
+          document.getElementById('crmUserStatus').textContent = u.status === 'activo' ? 'Activo' : 'Suspendido';
+
+          if (u.subscription) {
+            document.getElementById('crmSubPlanName').textContent = u.subscription.planName || 'Plan Business';
+            document.getElementById('crmSubPrice').textContent = (u.subscription.price || 129) + ' € /mes';
+            document.getElementById('crmSubStatus').textContent = u.subscription.status === 'active' ? 'Suscripción Activa (Renovación automática)' : 'Estado: ' + u.subscription.status;
+            if (u.subscription.currentPeriodEnd) {
+              document.getElementById('crmSubRenewal').textContent = 'Próximo cobro: ' + new Date(u.subscription.currentPeriodEnd).toLocaleDateString('es-ES');
+            }
+          }
+
+          if (u.invoices && u.invoices.length > 0) {
+            var invHtml = '';
+            u.invoices.forEach(function(inv) {
+              invHtml += '<tr style="border-bottom:1px solid var(--panel-border);">' +
+                '<td style="padding:8px 10px;"><strong>' + inv.id + '</strong></td>' +
+                '<td style="padding:8px 10px;">' + new Date(inv.date).toLocaleDateString('es-ES') + '</td>' +
+                '<td style="padding:8px 10px;">' + inv.total.toFixed(2) + ' ' + (inv.currency || 'EUR') + '</td>' +
+                '<td style="padding:8px 10px;"><span style="color:var(--green);">● ' + inv.status + '</span></td>' +
+                '<td style="padding:8px 10px;text-align:right;"><button type="button" onclick="alert(\'Descargando factura ' + inv.id + ' en PDF...\')" style="background:var(--green-dim);color:var(--green);border:1px solid var(--panel-border);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:10px;">PDF</button></td>' +
+              '</tr>';
+            });
+            document.getElementById('crmInvoicesTableBody').innerHTML = invHtml;
+          }
+        }
+      }).catch(function(err) {});
+
+    // Load audit logs for history
+    fetch('/api/admin/dashboards')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        // If admin or permitted, we can also simulate or fetch user audit logs
+      }).catch(function(err) {});
+
+    // Populate simulated operation history
+    var logsTbody = document.getElementById('crmLogsTableBody');
+    var now = Date.now();
+    var sampleLogs = [
+      { date: new Date(now - 1000 * 60 * 30).toLocaleString('es-ES'), action: 'INICIO_SESION', detail: 'Acceso privado verificado mediante token seguro' },
+      { date: new Date(now - 1000 * 3600 * 2).toLocaleString('es-ES'), action: 'CONFIG_DASHBOARD', detail: 'Actualización y sincronización de módulos activos' },
+      { date: new Date(now - 1000 * 3600 * 24).toLocaleString('es-ES'), action: 'CONSULTA_IA', detail: 'Generación de informe analítico ejecutivo con Gemini AI' },
+      { date: new Date(now - 1000 * 3600 * 72).toLocaleString('es-ES'), action: 'EXCEL_SYNC', detail: 'Importación de métricas desde plantilla XLSX' }
+    ];
+    var lHtml = '';
+    sampleLogs.forEach(function(l) {
+      lHtml += '<tr style="border-bottom:1px solid var(--panel-border);">' +
+        '<td style="padding:8px 10px;color:var(--text-dim);">' + l.date + '</td>' +
+        '<td style="padding:8px 10px;"><span style="color:var(--green);font-weight:600;">' + l.action + '</span></td>' +
+        '<td style="padding:8px 10px;">' + l.detail + '</td>' +
+      '</tr>';
+    });
+    logsTbody.innerHTML = lHtml;
+  }
 </script>
 </body>
 </html>

@@ -1,0 +1,48 @@
+{
+  "entities": {
+    "users": {
+      "description": "Stores user profiles, authentication credentials, permissions (roles), subscription details, and dashboard configurations.",
+      "fields": {
+        "id": "string",
+        "email": "string",
+        "name": "string",
+        "role": "string",
+        "company": "string",
+        "department": "string",
+        "status": "string",
+        "createdAt": "string",
+        "lastLogin": "string",
+        "passwordHash": "string",
+        "salt": "string",
+        "dashboardConfig": "map",
+        "subscription": "map"
+      }
+    },
+    "auditLogs": {
+      "description": "Stores security and activity logs for admins and users.",
+      "fields": {
+        "id": "string",
+        "timestamp": "string",
+        "user": "string",
+        "action": "string",
+        "detail": "string"
+      }
+    },
+    "tickets": {
+      "description": "Stores support tickets created by users associated with their UID.",
+      "fields": {
+        "id": "string",
+        "userId": "string",
+        "userEmail": "string",
+        "userName": "string",
+        "subject": "string",
+        "message": "string",
+        "status": "string",
+        "createdAt": "string"
+      }
+    }
+  },
+  "firestore": {
+    "rules": "rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    function isAuthenticated() {\n      return request.auth != null;\n    }\n\n    function isAdmin() {\n      return isAuthenticated() && \n        exists(/databases/$(database)/documents/users/$(request.auth.uid)) && \n        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';\n    }\n\n    match /users/{userId} {\n      allow read, write: if isAuthenticated() && (request.auth.uid == userId || isAdmin());\n    }\n\n    match /auditLogs/{logId} {\n      allow read, write: if isAdmin();\n    }\n\n    match /tickets/{ticketId} {\n      allow read, create: if isAuthenticated();\n      allow update, delete: if isAuthenticated();\n    }\n  }\n}"
+  }
+}

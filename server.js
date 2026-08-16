@@ -4,6 +4,7 @@ import fs from 'fs';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
+import admin from 'firebase-admin';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,7 +16,31 @@ app.use(express.json());
 app.use(express.static(__dirname, { extensions: ['html'] }));
 
 // ===================================================================
-// DATA STORAGE & PERSISTENCE (Users, Roles, Logs, Dashboard Metrics)
+// FIREBASE FIRESTORE INITIALIZATION
+// ===================================================================
+let db = null;
+try {
+  const firebaseConfigPath = path.join(__dirname, 'firebase-applet-config.json');
+  if (fs.existsSync(firebaseConfigPath)) {
+    const fbConfig = JSON.parse(fs.readFileSync(firebaseConfigPath, 'utf8'));
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.applicationDefault(),
+        projectId: fbConfig.projectId
+      });
+    }
+    db = admin.firestore();
+    if (fbConfig.firestoreDatabaseId) {
+      db.settings({ databaseId: fbConfig.firestoreDatabaseId });
+    }
+    console.log('Firebase Firestore initialized successfully for project:', fbConfig.projectId);
+  }
+} catch (err) {
+  console.error('Firebase Admin init notice:', err.message);
+}
+
+// ===================================================================
+// DATA STORAGE & PERSISTENCE (Firestore & Local Fallback)
 // ===================================================================
 const DATA_DIR = path.join(__dirname, 'data');
 if (!fs.existsSync(DATA_DIR)) {
@@ -28,6 +53,7 @@ if (!fs.existsSync(DATA_DIR)) {
 
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const LOGS_FILE = path.join(DATA_DIR, 'audit_logs.json');
+const TICKETS_FILE = path.join(DATA_DIR, 'tickets.json');
 const METRICS_FILE = path.join(DATA_DIR, 'metrics.json');
 
 // Password security helpers
@@ -295,7 +321,10 @@ function computeSubscriptionDetails(user) {
   };
 }
 
-function loadUsers() {
+let cachedUsers = null;
+let cachedLogs = null;
+
+function loadUsersLocal() {
   try {
     if (fs.existsSync(USERS_FILE)) {
       const raw = fs.readFileSync(USERS_FILE, 'utf8');
@@ -307,47 +336,119 @@ function loadUsers() {
           updated = true;
         }
       });
-      if (updated) saveUsers(parsed);
+      if (updated) saveUsersLocal(parsed);
       return parsed;
     }
   } catch (e) {
-    console.error('Error loading users:', e);
+    console.error('Error loading users local:', e);
   }
   const defaults = getInitialUsers();
-  saveUsers(defaults);
+  saveUsersLocal(defaults);
   return defaults;
 }
 
-function saveUsers(users) {
+function saveUsersLocal(users) {
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
   } catch (e) {
-    console.error('Error saving users:', e);
+    console.error('Error saving users local:', e);
   }
 }
 
-function loadLogs() {
+function loadUsers() {
+  if (cachedUsers) return cachedUsers;
+  cachedUsers = loadUsersLocal();
+  if (db) {
+    db.collection('users').get().then(snapshot => {
+      if (!snapshot.empty) {
+        const firestoreUsers = [];
+        snapshot.forEach(doc => firestoreUsers.push(doc.data()));
+        if (firestoreUsers.length > 0) {
+          cachedUsers = firestoreUsers;
+          saveUsersLocal(cachedUsers);
+        }
+      } else {
+        const batch = db.batch();
+        cachedUsers.forEach(u => {
+          batch.set(db.collection('users').doc(u.id), u);
+        });
+        batch.commit().catch(err => console.error('Error seeding users to Firestore:', err));
+      }
+    }).catch(err => console.error('Error loading users from Firestore:', err));
+  }
+  return cachedUsers;
+}
+
+function saveUsers(users) {
+  cachedUsers = users;
+  saveUsersLocal(users);
+  if (db) {
+    const batch = db.batch();
+    users.forEach(u => {
+      batch.set(db.collection('users').doc(u.id), u, { merge: true });
+    });
+    batch.commit().catch(err => console.error('Error saving users batch to Firestore:', err));
+  }
+}
+
+function loadLogsLocal() {
   try {
     if (fs.existsSync(LOGS_FILE)) {
       return JSON.parse(fs.readFileSync(LOGS_FILE, 'utf8'));
     }
   } catch (e) {
-    console.error('Error loading logs:', e);
+    console.error('Error loading logs local:', e);
   }
   const initialLogs = [
     { id: 'log_01', timestamp: new Date(Date.now() - 3600000 * 2).toISOString(), user: 'admin@centrodemando.ia', action: 'INICIO_SESION', detail: 'Acceso correcto al panel de administración' },
     { id: 'log_02', timestamp: new Date(Date.now() - 3600000 * 5).toISOString(), user: 'demo@empresa.com', action: 'CARGA_EXCEL', detail: 'Actualización de KPIs de ventas y operaciones desde Excel' },
     { id: 'log_03', timestamp: new Date(Date.now() - 3600000 * 12).toISOString(), user: 'admin@centrodemando.ia', action: 'ACTIVAR_MODULO', detail: 'Módulo de Sostenibilidad (ESG) activado para la organización' }
   ];
-  saveLogs(initialLogs);
+  saveLogsLocal(initialLogs);
   return initialLogs;
 }
 
-function saveLogs(logs) {
+function saveLogsLocal(logs) {
   try {
     fs.writeFileSync(LOGS_FILE, JSON.stringify(logs.slice(0, 100), null, 2), 'utf8');
   } catch (e) {
-    console.error('Error saving logs:', e);
+    console.error('Error saving logs local:', e);
+  }
+}
+
+function loadLogs() {
+  if (cachedLogs) return cachedLogs;
+  cachedLogs = loadLogsLocal();
+  if (db) {
+    db.collection('auditLogs').orderBy('timestamp', 'desc').limit(100).get().then(snapshot => {
+      if (!snapshot.empty) {
+        const firestoreLogs = [];
+        snapshot.forEach(doc => firestoreLogs.push(doc.data()));
+        if (firestoreLogs.length > 0) {
+          cachedLogs = firestoreLogs;
+          saveLogsLocal(cachedLogs);
+        }
+      } else {
+        const batch = db.batch();
+        cachedLogs.forEach(l => {
+          batch.set(db.collection('auditLogs').doc(l.id), l);
+        });
+        batch.commit().catch(err => console.error('Error seeding logs to Firestore:', err));
+      }
+    }).catch(err => console.error('Error loading logs from Firestore:', err));
+  }
+  return cachedLogs;
+}
+
+function saveLogs(logs) {
+  cachedLogs = logs.slice(0, 100);
+  saveLogsLocal(cachedLogs);
+  if (db) {
+    const batch = db.batch();
+    cachedLogs.forEach(l => {
+      batch.set(db.collection('auditLogs').doc(l.id), l, { merge: true });
+    });
+    batch.commit().catch(err => console.error('Error saving logs to Firestore:', err));
   }
 }
 
@@ -361,6 +462,76 @@ function addAuditLog(userEmail, action, detail) {
     detail
   });
   saveLogs(logs);
+}
+
+let cachedTickets = null;
+
+function loadTicketsLocal() {
+  try {
+    if (fs.existsSync(TICKETS_FILE)) {
+      return JSON.parse(fs.readFileSync(TICKETS_FILE, 'utf8'));
+    }
+  } catch (e) {
+    console.error('Error loading tickets local:', e);
+  }
+  const initialTickets = [
+    {
+      id: 'TCK-1092',
+      userId: 'usr_demo_02',
+      userEmail: 'laura@empresa.com',
+      userName: 'Laura Morales',
+      subject: 'Consulta sobre exportación de datos de sostenibilidad',
+      message: 'Necesitamos verificar si la plantilla de sostenibilidad puede incluir emisiones de alcance 3.',
+      status: 'Resuelto',
+      createdAt: new Date(Date.now() - 3600000 * 24).toISOString()
+    }
+  ];
+  saveTicketsLocal(initialTickets);
+  return initialTickets;
+}
+
+function saveTicketsLocal(tickets) {
+  try {
+    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Error saving tickets local:', e);
+  }
+}
+
+function loadTickets() {
+  if (cachedTickets) return cachedTickets;
+  cachedTickets = loadTicketsLocal();
+  if (db) {
+    db.collection('tickets').orderBy('createdAt', 'desc').get().then(snapshot => {
+      if (!snapshot.empty) {
+        const firestoreTickets = [];
+        snapshot.forEach(doc => firestoreTickets.push(doc.data()));
+        if (firestoreTickets.length > 0) {
+          cachedTickets = firestoreTickets;
+          saveTicketsLocal(cachedTickets);
+        }
+      } else {
+        const batch = db.batch();
+        cachedTickets.forEach(t => {
+          batch.set(db.collection('tickets').doc(t.id), t);
+        });
+        batch.commit().catch(err => console.error('Error seeding tickets to Firestore:', err));
+      }
+    }).catch(err => console.error('Error loading tickets from Firestore:', err));
+  }
+  return cachedTickets;
+}
+
+function saveTickets(tickets) {
+  cachedTickets = tickets;
+  saveTicketsLocal(tickets);
+  if (db) {
+    const batch = db.batch();
+    tickets.forEach(t => {
+      batch.set(db.collection('tickets').doc(t.id), t, { merge: true });
+    });
+    batch.commit().catch(err => console.error('Error saving tickets to Firestore:', err));
+  }
 }
 
 function generate30DaysSalesHistory() {
@@ -969,6 +1140,156 @@ app.delete('/api/admin/users/:id', requireAdmin, (req, res) => {
 app.get('/api/admin/logs', requireAdmin, (req, res) => {
   const logs = loadLogs();
   res.json({ logs });
+});
+
+// GET /api/tickets (Get tickets for authenticated user, or all if admin)
+app.get('/api/tickets', requireAuth, (req, res) => {
+  try {
+    const tickets = loadTickets();
+    if (req.user.role === 'admin') {
+      return res.json({ success: true, tickets });
+    }
+    const userTickets = tickets.filter(t => t.userId === req.user.id);
+    res.json({ success: true, tickets: userTickets });
+  } catch (error) {
+    console.error('Error in GET /api/tickets:', error);
+    res.status(500).json({ error: 'Error al obtener los tickets de soporte.' });
+  }
+});
+
+// POST /api/tickets (Create a new support ticket associated with user UID)
+app.post('/api/tickets', requireAuth, (req, res) => {
+  try {
+    const { subject, message } = req.body;
+    if (!subject || !message) {
+      return res.status(400).json({ error: 'El asunto y el mensaje son obligatorios.' });
+    }
+
+    const tickets = loadTickets();
+    const newTicketId = 'TCK-' + Math.floor(1000 + Math.random() * 9000);
+    const newTicket = {
+      id: newTicketId,
+      userId: req.user.id,
+      userEmail: req.user.email,
+      userName: req.user.name,
+      subject: subject.trim(),
+      message: message.trim(),
+      status: 'Abierto / En curso',
+      createdAt: new Date().toISOString()
+    };
+
+    tickets.unshift(newTicket);
+    saveTickets(tickets);
+
+    addAuditLog(req.user.email, 'CREAR_TICKET', `Ticket ${newTicketId} creado: "${newTicket.subject}"`);
+
+    res.status(201).json({
+      success: true,
+      message: 'Ticket creado exitosamente y guardado en Firestore asociado a tu cuenta.',
+      ticket: newTicket
+    });
+  } catch (error) {
+    console.error('Error in POST /api/tickets:', error);
+    res.status(500).json({ error: 'Error al crear el ticket de soporte.' });
+  }
+});
+
+// ===================================================================
+// USER DASHBOARD & ADMIN DATABASE ENDPOINTS (Usuarios y sus Dashboards)
+// ===================================================================
+
+// GET /api/dashboard/me
+app.get('/api/dashboard/me', requireAuth, (req, res) => {
+  const user = req.user;
+  if (!user.dashboardConfig) {
+    user.dashboardConfig = {
+      modules: ['resumen', 'clientes', 'operaciones', 'suministro', 'proyectos', 'talento', 'sostenibilidad', 'ventas-geo', 'noticias', 'powerbi', 'asistente-ia'],
+      kpis: ['ventasTotales', 'beneficioNeto', 'ticketMedio', 'clientesActivos'],
+      theme: 'default',
+      notes: ''
+    };
+  }
+  res.json({ success: true, dashboardConfig: user.dashboardConfig });
+});
+
+// PUT /api/dashboard/me
+app.put('/api/dashboard/me', requireAuth, (req, res) => {
+  try {
+    const { modules, kpis, theme, notes } = req.body;
+    const users = loadUsers();
+    const userIndex = users.findIndex(u => u.id === req.user.id);
+    if (userIndex === -1) return res.status(404).json({ error: 'Usuario no encontrado.' });
+
+    users[userIndex].dashboardConfig = {
+      modules: modules || users[userIndex].dashboardConfig?.modules || [],
+      kpis: kpis || users[userIndex].dashboardConfig?.kpis || [],
+      theme: theme || 'default',
+      notes: notes || '',
+      updatedAt: new Date().toISOString()
+    };
+
+    saveUsers(users);
+    res.json({ success: true, message: 'Dashboard guardado correctamente en la base de datos', dashboardConfig: users[userIndex].dashboardConfig });
+  } catch (error) {
+    console.error('Error in PUT /api/dashboard/me:', error);
+    res.status(500).json({ error: 'Error al guardar el dashboard.' });
+  }
+});
+
+// GET /api/admin/dashboards (Admin only: database of all users and their dashboards)
+app.get('/api/admin/dashboards', requireAdmin, (req, res) => {
+  const users = loadUsers();
+  const records = users.map(u => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    role: u.role,
+    company: u.company,
+    department: u.department,
+    status: u.status,
+    createdAt: u.createdAt,
+    lastLogin: u.lastLogin,
+    dashboardConfig: u.dashboardConfig || {
+      modules: ['resumen', 'clientes', 'operaciones', 'suministro', 'proyectos', 'talento', 'sostenibilidad', 'ventas-geo', 'noticias', 'powerbi', 'asistente-ia'],
+      kpis: ['ventasTotales', 'beneficioNeto', 'ticketMedio', 'clientesActivos'],
+      theme: 'default',
+      notes: ''
+    },
+    subscription: {
+      plan: u.subscription?.plan,
+      planName: u.subscription?.planName,
+      status: u.subscription?.status
+    }
+  }));
+  res.json({ success: true, totalUsers: records.length, records });
+});
+
+// PUT /api/admin/users/:id/dashboard (Admin only: update any user's dashboard configuration)
+app.put('/api/admin/users/:id/dashboard', requireAdmin, (req, res) => {
+  try {
+    const targetId = req.params.id;
+    const { modules, kpis, theme, notes } = req.body;
+    const users = loadUsers();
+    const userIndex = users.findIndex(u => u.id === targetId);
+    if (userIndex === -1) return res.status(404).json({ error: 'Usuario no encontrado.' });
+
+    users[userIndex].dashboardConfig = {
+      modules: modules || users[userIndex].dashboardConfig?.modules || [],
+      kpis: kpis || users[userIndex].dashboardConfig?.kpis || [],
+      theme: theme || 'default',
+      notes: notes || '',
+      updatedByAdmin: req.user.email,
+      updatedAt: new Date().toISOString()
+    };
+
+    saveUsers(users);
+    addAuditLog(req.user.email, 'ADMIN_ACTUALIZAR_DASHBOARD', `Admin actualizó el dashboard del usuario ${users[userIndex].email}`);
+
+    res.json({ success: true, message: `Dashboard de ${users[userIndex].name} actualizado por el administrador.`, dashboardConfig: users[userIndex].dashboardConfig });
+  } catch (error) {
+    console.error('Error in PUT /api/admin/users/:id/dashboard:', error);
+    res.status(500).json({ error: 'Error al actualizar el dashboard del usuario.' });
+  }
 });
 
 // ===================================================================
