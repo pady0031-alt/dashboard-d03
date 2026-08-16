@@ -35,115 +35,20 @@
   </div>
 </header>
 
-<main>
-
-  <!-- HERO -->
   <section class="hero">
     <div class="grid-bg"></div>
-    <div class="container hero-grid">
-      <div>
-        <div class="eyebrow">Centro de mando · para empresas</div>
-        <h1>Toda tu empresa,<br><em>en una sola pantalla.</em></h1>
-        <p class="lead">Ventas, clientes, operaciones, cadena de suministro y sostenibilidad en tiempo real — con un asistente de IA que te dice qué mirar antes de que se convierta en un problema.</p>
-        <div class="cta-row">
-          <a href="panel.html" class="btn btn-primary">Entrar al Panel en Vivo →</a>
-          <a href="registro.html" class="btn btn-ghost">Crear Cuenta Gratis</a>
-        </div>
-        <div class="hero-stats">
-          <div class="hero-stat"><b>10 módulos</b><span>configurables</span></div>
-          <div class="hero-stat"><b>Excel &amp; Power BI</b><span>importación directa</span></div>
-          <div class="hero-stat"><b>Tiempo real</b><span>sin informes manuales</span></div>
-        </div>
+    <div class="container" style="max-width:900px; text-align:center;">
+      <div class="eyebrow">Centro de mando · para empresas</div>
+      <h1>Toda tu empresa,<br><em>en una sola pantalla.</em></h1>
+      <p class="lead" style="max-width:700px; margin:0 auto 30px;">Ventas, clientes, operaciones, cadena de suministro y sostenibilidad en tiempo real — con un asistente de IA que te dice qué mirar antes de que se convierta en un problema.</p>
+      <div class="cta-row" style="justify-content:center;">
+        <a href="panel.html" class="btn btn-primary">Entrar al Panel en Vivo →</a>
+        <a href="registro.html" class="btn btn-ghost">Crear Cuenta Gratis</a>
       </div>
-      <div class="hero-cockpit hud" id="heroCockpit">
-        <!-- TOP HUD CONSOLE BAR -->
-        <div class="cockpit-topbar">
-          <div class="cockpit-status-dot">
-            <span class="live-pulse"></span>
-            <span class="cockpit-status-text" id="cockpitStatusLabel"><strong>TELEMETRÍA EN VIVO</strong> · 12ms</span>
-          </div>
-          <div class="cockpit-mode-badges">
-            <span class="cockpit-pill"><span class="pill-dot"></span> Excel &amp; Power BI</span>
-            <span class="cockpit-pill active"><span class="pill-dot green"></span> IA Activa</span>
-          </div>
-        </div>
-
-        <!-- COCKPIT NAVIGATION TABS (Interactive Switcher) -->
-        <div class="cockpit-tabs" role="tablist">
-          <button class="cockpit-tab active" id="tabCockpitVentas" onclick="switchHeroCockpitTab('ventas')">
-            <span class="tab-icon">📊</span> <span>Ventas &amp; KPIs</span>
-          </button>
-          <button class="cockpit-tab" id="tabCockpitOperaciones" onclick="switchHeroCockpitTab('operaciones')">
-            <span class="tab-icon">🚚</span> <span>Operaciones &amp; Stock</span>
-          </button>
-          <button class="cockpit-tab" id="tabCockpitClientes" onclick="switchHeroCockpitTab('clientes')">
-            <span class="tab-icon">👥</span> <span>Clientes &amp; Retención</span>
-          </button>
-        </div>
-
-        <!-- MAIN DYNAMIC CONTENT CONTAINER -->
-        <div class="cockpit-body">
-          
-          <!-- KPI ROW -->
-          <div class="cockpit-kpi-grid">
-            <div class="cockpit-kpi-card">
-              <div class="kpi-label" id="kpiHeroLabel1">Facturación Mes</div>
-              <div class="kpi-val" id="kpiHeroVal1">2.847.654 €</div>
-              <div class="kpi-trend up" id="kpiHeroTrend1">▲ +15.3% <span id="kpiHeroSub1">vs objetivo</span></div>
-              <div class="kpi-sparkline" id="kpiHeroSpark1">
-                <div class="spark-bar" style="height:45%;"></div>
-                <div class="spark-bar" style="height:60%;"></div>
-                <div class="spark-bar" style="height:55%;"></div>
-                <div class="spark-bar" style="height:78%;"></div>
-                <div class="spark-bar" style="height:70%;"></div>
-                <div class="spark-bar" style="height:90%;"></div>
-                <div class="spark-bar active" style="height:100%;"></div>
-              </div>
-            </div>
-            
-            <div class="cockpit-kpi-card">
-              <div class="kpi-label" id="kpiHeroLabel2">Margen Bruto</div>
-              <div class="kpi-val" id="kpiHeroVal2">34.8%</div>
-              <div class="kpi-trend up" id="kpiHeroTrend2">▲ +2.4% <span id="kpiHeroSub2">rentabilidad</span></div>
-              <div class="kpi-progress-bar">
-                <div class="kpi-prog-fill" id="kpiHeroProg2" style="width:84%;"></div>
-              </div>
-            </div>
-
-            <div class="cockpit-kpi-card">
-              <div class="kpi-label" id="kpiHeroLabel3">Nivel de Servicio</div>
-              <div class="kpi-val" id="kpiHeroVal3">98.6%</div>
-              <div class="kpi-trend neutral" id="kpiHeroTrend3">● 48 tiendas <span id="kpiHeroSub3">activas</span></div>
-              <div class="kpi-progress-bar">
-                <div class="kpi-prog-fill green" id="kpiHeroProg3" style="width:98%;"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- EXECUTIVE AI INSIGHT BANNER -->
-          <div class="cockpit-ai-card">
-            <div class="ai-card-header">
-              <div class="ai-card-badge">
-                <span class="ai-sparkle">✦</span>
-                <strong>ASISTENTE EJECUTIVO IA</strong>
-              </div>
-              <span class="ai-card-time" id="aiHeroTime">Actualizado en tiempo real · 99.4% precisión</span>
-            </div>
-            <div class="ai-card-body" id="aiHeroText">
-              <p>💡 <strong>Oportunidad detectada:</strong> Las ventas en el canal Retail superan la previsión un <strong>+15.3%</strong>. Se recomienda incrementar la reposición de stock en la delegación Norte antes del fin de semana.</p>
-            </div>
-          </div>
-
-          <!-- MINI METRICS & SYNC FOOTER -->
-          <div class="cockpit-footer-row">
-            <div class="cockpit-sync-badge">
-              <span class="sync-icon">⚡</span>
-              <span><strong>Conectores activos:</strong> Excel .xlsx · Power BI · ERP</span>
-            </div>
-            <a href="panel.html" class="cockpit-live-link">Abrir Centro de Mando →</a>
-          </div>
-
-        </div>
+      <div class="hero-stats" style="justify-content:center; margin-top:50px;">
+        <div class="hero-stat"><b>10 módulos</b><span>configurables</span></div>
+        <div class="hero-stat"><b>Excel &amp; Power BI</b><span>importación directa</span></div>
+        <div class="hero-stat"><b>Tiempo real</b><span>sin informes manuales</span></div>
       </div>
     </div>
   </section>

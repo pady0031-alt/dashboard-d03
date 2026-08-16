@@ -268,6 +268,7 @@
         <div class="cfg-btn" id="importBtn"><span class="gear">📊</span> Importar Excel</div>
         <input type="file" id="excelInput" accept=".xlsx,.xls,.csv" style="display:none;">
         <div class="cfg-btn" id="crmModalBtn" style="background:rgba(62,224,138,0.15);border-color:var(--green);color:var(--green);"><span class="gear" style="color:var(--green);">💼</span> Portal CRM</div>
+        <div class="cfg-btn" id="adminClientsBtn" style="display:none;background:rgba(232,193,90,0.15);border-color:var(--amber);color:var(--amber);"><span class="gear" style="color:var(--amber);">👥</span> Gestión de Clientes</div>
         <div class="cfg-btn" id="adminDbBtn" style="display:none;background:rgba(232,193,90,0.15);border-color:var(--amber);color:var(--amber);"><span class="gear" style="color:var(--amber);">🗄️</span> BD: Usuarios & Dashboards</div>
         <div class="cfg-btn" id="cfgOpenBtn"><span class="gear">⚙</span> Configuración</div>
       </div>
@@ -527,6 +528,73 @@
           </thead>
           <tbody id="adminDbTableBody">
             <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text-dim);">Cargando base de datos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN CLIENTS / USERS MODAL (Solo Administradores) -->
+  <div class="cfg-overlay" id="adminClientsOverlay">
+    <div class="cfg-modal" style="max-width:960px; width:95%;">
+      <div class="cfg-head">
+        <h2>Gestión de Clientes y Usuarios Registrados (Zona Exclusiva Admin)</h2>
+        <span class="cfg-close" id="adminClientsCloseBtn">✕</span>
+      </div>
+      <div class="cfg-sub" style="margin-bottom:14px;">
+        Visualiza, filtra y administra todos los clientes y usuarios registrados en la plataforma. Solo accesible para administradores de la web.
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="adminUserSearch" placeholder="Buscar por nombre o email..." style="background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;width:240px;">
+          <div id="adminClientsStats" style="font-size:12px;color:var(--green);font-weight:600;">Cargando...</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" id="adminNewUserBtn" class="cfg-btn" style="background:var(--green-dim);color:var(--green);padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:600;">+ Nuevo Usuario</button>
+          <button type="button" id="adminClientsRefreshBtn" class="cfg-btn" style="background:rgba(255,255,255,0.05);color:var(--text);padding:6px 12px;border-radius:6px;cursor:pointer;">🔄 Actualizar</button>
+        </div>
+      </div>
+
+      <!-- New User Form (hidden by default) -->
+      <div id="adminNewUserForm" style="display:none;background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:14px;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:600;margin-bottom:8px;">Crear Nuevo Usuario / Cliente</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+          <input type="text" id="newUserName" placeholder="Nombre completo" style="background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;">
+          <input type="email" id="newUserEmail" placeholder="Correo electrónico" style="background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;">
+          <input type="password" id="newUserPassword" placeholder="Contraseña temporal" style="background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+          <input type="text" id="newUserCompany" placeholder="Empresa" style="background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;">
+          <input type="text" id="newUserDept" placeholder="Departamento" style="background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;">
+          <select id="newUserRole" style="background:rgba(0,0,0,0.8);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;">
+            <option value="user">Rol: Usuario</option>
+            <option value="admin">Rol: Administrador</option>
+          </select>
+          <select id="newUserStatus" style="background:rgba(0,0,0,0.8);border:1px solid var(--panel-border);border-radius:6px;padding:8px;color:var(--text);font-size:12px;">
+            <option value="activo">Estado: Activo</option>
+            <option value="suspendido">Estado: Suspendido</option>
+          </select>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;">
+          <button type="button" id="newUserCancelBtn" class="cfg-btn" style="cursor:pointer;">Cancelar</button>
+          <button type="button" id="newUserSubmitBtn" class="cfg-btn" style="background:var(--green);color:#000;font-weight:600;cursor:pointer;border:none;">Guardar Usuario</button>
+        </div>
+      </div>
+
+      <div style="max-height:450px; overflow-y:auto; border:1px solid var(--panel-border); border-radius:8px; background:rgba(0,0,0,0.3);">
+        <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:left;">
+          <thead>
+            <tr style="background:rgba(18,32,28,0.9); border-bottom:1px solid var(--panel-border); color:var(--text-dim);">
+              <th style="padding:10px;">Cliente / Usuario</th>
+              <th style="padding:10px;">Empresa & Dpto</th>
+              <th style="padding:10px;">Rol</th>
+              <th style="padding:10px;">Estado</th>
+              <th style="padding:10px;">Registro</th>
+              <th style="padding:10px;text-align:right;">Acciones Admin</th>
+            </tr>
+          </thead>
+          <tbody id="adminClientsTableBody">
+            <tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text-dim);">Cargando clientes registrados...</td></tr>
           </tbody>
         </table>
       </div>
@@ -1058,8 +1126,10 @@
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data && data.user && data.user.role === 'admin') {
-        var adminBtn = document.getElementById('adminDbBtn');
-        if (adminBtn) adminBtn.style.display = 'flex';
+        var adminDbBtn = document.getElementById('adminDbBtn');
+        if (adminDbBtn) adminDbBtn.style.display = 'flex';
+        var adminClientsBtn = document.getElementById('adminClientsBtn');
+        if (adminClientsBtn) adminClientsBtn.style.display = 'flex';
       }
     }).catch(function(err) {});
 
@@ -1351,6 +1421,184 @@
     });
     logsTbody.innerHTML = lHtml;
   }
+
+  // Admin Clients Management Modal Logic
+  var adminClientsOverlay = document.getElementById('adminClientsOverlay');
+  var adminClientsBtn = document.getElementById('adminClientsBtn');
+  if (adminClientsBtn) {
+    adminClientsBtn.addEventListener('click', function() {
+      adminClientsOverlay.classList.add('open');
+      loadAdminClientsList();
+    });
+  }
+  var adminClientsCloseBtn = document.getElementById('adminClientsCloseBtn');
+  if (adminClientsCloseBtn) {
+    adminClientsCloseBtn.addEventListener('click', function() {
+      adminClientsOverlay.classList.remove('open');
+    });
+  }
+  if (adminClientsOverlay) {
+    adminClientsOverlay.addEventListener('click', function(e) {
+      if (e.target === adminClientsOverlay) adminClientsOverlay.classList.remove('open');
+    });
+  }
+  var adminClientsRefreshBtn = document.getElementById('adminClientsRefreshBtn');
+  if (adminClientsRefreshBtn) {
+    adminClientsRefreshBtn.addEventListener('click', loadAdminClientsList);
+  }
+
+  var adminNewUserBtn = document.getElementById('adminNewUserBtn');
+  var adminNewUserForm = document.getElementById('adminNewUserForm');
+  var newUserCancelBtn = document.getElementById('newUserCancelBtn');
+  if (adminNewUserBtn && adminNewUserForm) {
+    adminNewUserBtn.addEventListener('click', function() {
+      adminNewUserForm.style.display = adminNewUserForm.style.display === 'none' ? 'block' : 'none';
+    });
+  }
+  if (newUserCancelBtn && adminNewUserForm) {
+    newUserCancelBtn.addEventListener('click', function() {
+      adminNewUserForm.style.display = 'none';
+    });
+  }
+
+  var newUserSubmitBtn = document.getElementById('newUserSubmitBtn');
+  if (newUserSubmitBtn) {
+    newUserSubmitBtn.addEventListener('click', function() {
+      var name = document.getElementById('newUserName').value.trim();
+      var email = document.getElementById('newUserEmail').value.trim();
+      var password = document.getElementById('newUserPassword').value.trim();
+      var company = document.getElementById('newUserCompany').value.trim();
+      var department = document.getElementById('newUserDept').value.trim();
+      var role = document.getElementById('newUserRole').value;
+      var status = document.getElementById('newUserStatus').value;
+
+      if (!name || !email || !password) {
+        alert('Nombre, email y contraseña son obligatorios.');
+        return;
+      }
+
+      fetch('/api/admin/users', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ name: name, email: email, password: password, company: company, department: department, role: role, status: status })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.success) {
+          alert('¡Usuario creado correctamente!');
+          document.getElementById('newUserName').value = '';
+          document.getElementById('newUserEmail').value = '';
+          document.getElementById('newUserPassword').value = '';
+          document.getElementById('newUserCompany').value = '';
+          document.getElementById('newUserDept').value = '';
+          adminNewUserForm.style.display = 'none';
+          loadAdminClientsList();
+        } else {
+          alert('Error al crear usuario: ' + (data.error || 'Desconocido'));
+        }
+      }).catch(function(err) {
+        alert('Error de red al crear usuario.');
+      });
+    });
+  }
+
+  var cachedAdminUsers = [];
+  var adminUserSearch = document.getElementById('adminUserSearch');
+  if (adminUserSearch) {
+    adminUserSearch.addEventListener('input', function() {
+      renderAdminClientsTable(cachedAdminUsers, this.value.trim().toLowerCase());
+    });
+  }
+
+  function loadAdminClientsList() {
+    var tbody = document.getElementById('adminClientsTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text-dim);">Cargando clientes y usuarios...</td></tr>';
+    
+    fetch('/api/admin/users', { headers: getAuthHeaders() })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.users) {
+          cachedAdminUsers = data.users;
+          renderAdminClientsTable(cachedAdminUsers, adminUserSearch ? adminUserSearch.value.trim().toLowerCase() : '');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--red);">Acceso restringido o error al cargar usuarios.</td></tr>';
+        }
+      })
+      .catch(function(err) {
+        tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--red);">Error de conexión con el servidor.</td></tr>';
+      });
+  }
+
+  function renderAdminClientsTable(users, query) {
+    var tbody = document.getElementById('adminClientsTableBody');
+    if (!tbody) return;
+    
+    var filtered = users.filter(function(u) {
+      if (!query) return true;
+      return (u.name && u.name.toLowerCase().includes(query)) || (u.email && u.email.toLowerCase().includes(query)) || (u.company && u.company.toLowerCase().includes(query));
+    });
+
+    document.getElementById('adminClientsStats').textContent = filtered.length + ' de ' + users.length + ' usuarios registrados';
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--text-dim);">No se encontraron usuarios que coincidan con la búsqueda.</td></tr>';
+      return;
+    }
+
+    var html = '';
+    filtered.forEach(function(u) {
+      var isAdm = u.role === 'admin';
+      var isActive = u.status === 'activo';
+      var regDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-ES') : 'N/D';
+
+      html += '<tr style="border-bottom:1px solid var(--panel-border);">' +
+        '<td style="padding:10px;"><strong>' + u.name + '</strong><br><span style="color:var(--text-dim);font-size:10px;">' + u.email + '</span></td>' +
+        '<td style="padding:10px;">' + (u.company || 'Empresa') + '<br><span style="color:var(--text-dim);font-size:10px;">' + (u.department || 'General') + '</span></td>' +
+        '<td style="padding:10px;"><span style="color:' + (isAdm ? 'var(--amber)' : 'var(--text)') + ';font-weight:600;">' + (isAdm ? 'Administrador' : 'Usuario') + '</span></td>' +
+        '<td style="padding:10px;"><span style="color:' + (isActive ? 'var(--green)' : 'var(--red)') + ';">● ' + (u.status || 'activo') + '</span></td>' +
+        '<td style="padding:10px;color:var(--text-dim);">' + regDate + '</td>' +
+        '<td style="padding:10px;text-align:right;white-space:nowrap;">' +
+          '<button type="button" onclick="adminToggleUserStatus(\'' + u.id + '\', \'' + (isActive ? 'suspendido' : 'activo') + '\')" style="background:rgba(255,255,255,0.05);border:1px solid var(--panel-border);color:var(--text);padding:4px 8px;border-radius:4px;cursor:pointer;font-size:10px;margin-right:4px;" title="Cambiar estado">' + (isActive ? 'Suspender' : 'Activar') + '</button>' +
+          '<button type="button" onclick="adminDeleteUser(\'' + u.id + '\', \'' + u.email + '\')" style="background:rgba(235,87,87,0.15);border:1px solid var(--panel-border);color:var(--red);padding:4px 8px;border-radius:4px;cursor:pointer;font-size:10px;" title="Eliminar cuenta">Eliminar</button>' +
+        '</td>' +
+      '</tr>';
+    });
+    tbody.innerHTML = html;
+  }
+
+  window.adminToggleUserStatus = function(userId, newStatus) {
+    fetch('/api/admin/users/' + userId, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ status: newStatus })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data && data.success) {
+        loadAdminClientsList();
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo actualizar'));
+      }
+    });
+  };
+
+  window.adminDeleteUser = function(userId, email) {
+    if (!confirm('¿Estás seguro de eliminar al usuario ' + email + '? Esta acción es irreversible.')) return;
+    fetch('/api/admin/users/' + userId, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data && data.success) {
+        alert('Usuario eliminado correctamente.');
+        loadAdminClientsList();
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo eliminar'));
+      }
+    });
+  };
 </script>
 </body>
 </html>
